@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/layoutMyPosition"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/bg_address">
+
+    <ImageView
+        android:id="@+id/imgview"
+        android:layout_width="56dp"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:padding="18dp"
+        android:src="@drawable/ic_history"
+        android:tint="#9e9e9e" />
+
+    <LinearLayout
+        android:id="@+id/layout11"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="15dp"
+        android:layout_toRightOf="@+id/imgview"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/txtAddressTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginTop="12dp"
+            android:layout_marginBottom="2dp"
+            android:layout_weight="1"
+            android:gravity="center_vertical"
+            android:paddingLeft="15dp"
+            android:paddingRight="15dp"
+            android:singleLine="true"
+            android:text="My position"
+            android:textColor="#424242"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/txtAddressDetail"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginTop="2dp"
+            android:layout_marginBottom="12dp"
+            android:layout_weight="1"
+            android:gravity="center_vertical"
+            android:paddingLeft="15dp"
+            android:paddingRight="15dp"
+            android:singleLine="true"
+            android:text="My position"
+            android:textColor="#9e9e9e"
+            android:textSize="14sp" />
+
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_below="@+id/layout11"
+        android:layout_marginLeft="71dp"
+        android:background="#eee" />
+
+</RelativeLayout>

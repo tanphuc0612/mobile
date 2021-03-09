@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:sothree="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".activity.FindAdressActivity">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#ffffff"
+        android:elevation="1dp"
+        tools:targetApi="lollipop">
+
+        <ImageButton
+            android:id="@+id/btnBack"
+            android:layout_width="56dp"
+            android:layout_height="56dp"
+            android:background="@drawable/bg_button"
+            android:src="@drawable/ic_back"
+            android:tint="#9e9e9e" />
+
+        <LinearLayout
+            android:id="@+id/layout1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="15dp"
+            android:layout_toLeftOf="@+id/imgSwitch"
+            android:layout_toRightOf="@+id/btnBack"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/txtSearch"
+                android:layout_width="match_parent"
+                android:layout_height="36dp"
+                android:layout_gravity="center_vertical"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
+                android:layout_weight="1"
+                android:background="@drawable/bg_route"
+                android:gravity="center_vertical"
+                android:hint="Search here"
+                android:paddingLeft="15dp"
+                android:paddingRight="15dp"
+                android:singleLine="true"
+                android:textColor="#424242"
+                android:textColorHint="#757575"
+                android:textSize="15sp" />
+
+        </LinearLayout>
+
+    </RelativeLayout>
+
+    <fragment xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/map"
+        android:name="com.google.android.gms.maps.SupportMapFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="56dp"
+        tools:context="com.example.lightmap.activity.CurrentLocationActivity" />
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/btnLayers"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="right"
+        android:layout_marginTop="80dp"
+        android:layout_marginRight="20dp"
+        android:src="@drawable/ic_layers"
+        android:tint="#424242"
+        sothree:backgroundTint="#fff"
+        sothree:fabSize="mini"
+        sothree:rippleColor="#ffffff"
+        tools:targetApi="lollipop" />
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/btnMyLocation"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="right|bottom"
+        android:layout_marginRight="10dp"
+        android:layout_marginBottom="170dp"
+        android:src="@drawable/ic_my_location"
+        android:tint="#424242"
+        sothree:backgroundTint="#fff"
+        sothree:fabSize="normal"
+        sothree:rippleColor="#ffffff"
+        tools:targetApi="lollipop" />
+
+    <LinearLayout
+        android:id="@+id/layoutBottom"
+        android:layout_width="match_parent"
+        android:layout_height="150dp"
+        android:layout_gravity="bottom"
+        android:background="#fff"
+        android:orientation="vertical"
+        android:padding="15dp"
+        android:visibility="gone">
+
+        <TextView
+            android:id="@+id/addressTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="3dp"
+            android:layout_weight="1"
+            android:singleLine="true"
+            android:textColor="#212121"
+            android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/addressDetail"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="3dp"
+            android:layout_weight="1"
+            android:singleLine="true"
+            android:textColor="#757575"
+            android:textSize="14sp" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/txtShare"
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:layout_gravity="center_vertical"
+                android:layout_marginRight="5dp"
+                android:layout_weight="1"
+                android:background="@drawable/bg_route"
+                android:drawableLeft="@drawable/ic_share"
+                android:drawablePadding="10dp"
+                android:gravity="center_vertical"
+                android:paddingLeft="15dp"
+                android:paddingRight="15dp"
+                android:singleLine="true"
+                android:text="Share"
+                android:textColor="#1565C0"
+                android:textSize="15sp" />
+
+            <TextView
+                android:id="@+id/txtGoToAddress"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_gravity="center"
+                android:layout_marginLeft="5dp"
+                android:layout_toRightOf="@+id/txtShare"
+                android:layout_weight="1"
+                android:background="@drawable/bg_route"
+                android:drawableLeft="@drawable/ic_directions_black_24dp"
+                android:gravity="center"
+                android:paddingLeft="20dp"
+                android:paddingRight="15dp"
+                android:singleLine="true"
+                android:text="Go to the address"
+                android:textColor="#1565C0"
+                android:textSize="15sp" />
+        </RelativeLayout>
+    </LinearLayout>
+
+</FrameLayout>

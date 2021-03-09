@@ -1,0 +1,561 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <RelativeLayout
+        android:id="@+id/layoutTitle"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:background="#ffffff"
+        android:elevation="1dp"
+        tools:targetApi="lollipop">
+
+        <ImageButton
+            android:id="@+id/btnBack"
+            android:layout_width="56dp"
+            android:layout_height="56dp"
+            android:background="@drawable/bg_button"
+            android:src="@drawable/ic_back"
+            android:tint="#757575" />
+
+        <TextView
+            android:id="@+id/title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="@string/category"
+            android:textColor="#616161"
+            android:textSize="18sp" />
+    </RelativeLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/layoutTitle">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="15dp"
+                android:layout_marginTop="15dp"
+                android:text="@string/food_and_drink"
+                android:textColor="#212121"
+                android:textSize="15sp" />
+
+            <LinearLayout
+                android:id="@+id/layoutFoodDrink"
+                style="@style/layout_item_map_type">
+
+                <LinearLayout
+                    android:id="@+id/layoutRestaurant"
+                    style="@style/layout_item_map_type_children">
+
+                    <ImageView
+                        style="@style/image_map_place"
+                        android:src="@drawable/i1" />
+
+                    <TextView
+                        style="@style/text_item"
+                        android:text="@string/restaurant" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/layoutBar"
+                    style="@style/layout_item_map_type_children">
+
+
+                    <ImageView
+                        style="@style/image_map_place"
+                        android:src="@drawable/i8" />
+
+                    <TextView
+                        style="@style/text_item"
+                        android:text="@string/bar" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/layoutCoffee"
+                    style="@style/layout_item_map_type_children">
+
+                    <ImageView
+                        style="@style/image_map_place"
+                        android:src="@drawable/i2" />
+
+                    <TextView
+                        style="@style/text_item"
+                        android:text="@string/coffee" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/layoutDelivery"
+                    style="@style/layout_item_map_type_children">
+
+                    <ImageView
+                        style="@style/image_map_place"
+                        android:src="@drawable/i_deliver_food"
+                        android:tint="#4caf50" />
+
+                    <TextView
+                        style="@style/text_item"
+                        android:text="@string/delivery" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="15dp"
+                android:layout_marginTop="15dp"
+                android:text="@string/services"
+                android:textColor="#212121"
+                android:textSize="15sp" />
+
+            <LinearLayout
+                style="@style/layout_item_map_type_parent"
+                android:orientation="vertical">
+
+                <LinearLayout style="@style/layout_item_map_type">
+
+                    <LinearLayout
+                        android:id="@+id/layoutHotel"
+                        style="@style/layout_item_map_type_children">
+
+                        <ImageView
+                            style="@style/image_map_place"
+                            android:src="@drawable/i7" />
+
+                        <TextView
+                            style="@style/text_item"
+
+                            android:text="@string/hotel" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/layoutAtm"
+                        style="@style/layout_item_map_type_children">
+
+                        <ImageView
+                            style="@style/image_map_place"
+                            android:src="@drawable/i4" />
+
+                        <TextView
+                            style="@style/text_item"
+                            android:text="@string/atm" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/layoutBeautySalon"
+                        style="@style/layout_item_map_type_children">
+
+                        <ImageView
+                            style="@style/image_map_place"
+                            android:src="@drawable/i30" />
+
+                        <TextView
+                            style="@style/text_item"
+
+                            android:text="@string/beautySalons" />
+                    </LinearLayout>
+
+
+                </LinearLayout>
+
+                <LinearLayout style="@style/layout_item_map_type">
+
+
+                    <LinearLayout
+                        android:id="@+id/layoutBank"
+                        style="@style/layout_item_map_type_children">
+
+                        <ImageView
+                            style="@style/image_map_place"
+                            android:src="@drawable/i12" />
+
+                        <TextView
+                            style="@style/text_item"
+                            android:text="@string/bank" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/layoutDryClean"
+                        style="@style/layout_item_map_type_children">
+
+                        <ImageView
+                            style="@style/image_map_place"
+                            android:src="@drawable/i37" />
+
+                        <TextView
+                            style="@style/text_item"
+
+                            android:text="@string/dryClean" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/layoutHospital"
+                        style="@style/layout_item_map_type_children">
+
+                        <ImageView
+                            style="@style/image_map_place"
+                            android:src="@drawable/i13" />
+
+                        <TextView
+                            style="@style/text_item"
+
+                            android:text="@string/hospital" />
+                    </LinearLayout>
+
+
+                </LinearLayout>
+
+                <LinearLayout style="@style/layout_item_map_type">
+
+                    <LinearLayout
+                        android:id="@+id/layoutGas"
+                        style="@style/layout_item_map_type_children">
+
+                        <ImageView
+                            style="@style/image_map_place"
+                            android:src="@drawable/i3" />
+
+                        <TextView
+                            style="@style/text_item"
+
+                            android:text="@string/gas" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/layoutPharmacy"
+                        style="@style/layout_item_map_type_children">
+
+                        <ImageView
+                            style="@style/image_map_place"
+                            android:src="@drawable/i5" />
+
+                        <TextView
+                            style="@style/text_item"
+                            android:text="@string/pharmacy" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/layoutParking"
+                        style="@style/layout_item_map_type_children">
+
+                        <ImageView
+                            style="@style/image_map_place"
+                            android:src="@drawable/i9" />
+
+                        <TextView
+                            style="@style/text_item"
+                            android:text="@string/parking" />
+                    </LinearLayout>
+
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="15dp"
+                android:layout_marginTop="15dp"
+                android:text="@string/thingsToDo"
+                android:textColor="#212121"
+                android:textSize="15sp" />
+
+            <LinearLayout
+                style="@style/layout_item_map_type_parent"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:id="@+id/layoutThingToDo"
+                    style="@style/layout_item_map_type">
+
+                    <LinearLayout
+                        android:id="@+id/layoutPark"
+                        style="@style/layout_item_map_type_children">
+
+                        <ImageView
+                            style="@style/image_map_place"
+                            android:src="@drawable/i23" />
+
+                        <TextView
+                            style="@style/text_item"
+                            android:text="@string/park" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/layoutGym"
+                        style="@style/layout_item_map_type_children">
+
+                        <ImageView
+                            style="@style/image_map_place"
+                            android:src="@drawable/i17" />
+
+                        <TextView
+                            style="@style/text_item"
+                            android:text="@string/gym" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/layoutArt"
+                        style="@style/layout_item_map_type_children">
+
+                        <ImageView
+                            style="@style/image_map_place"
+                            android:src="@drawable/i_art" />
+
+                        <TextView
+                            style="@style/text_item"
+                            android:text="@string/art" />
+                    </LinearLayout>
+
+                </LinearLayout>
+
+                <LinearLayout style="@style/layout_item_map_type">
+
+                    <LinearLayout
+                        android:id="@+id/layoutStadium"
+                        style="@style/layout_item_map_type_children">
+
+                        <ImageView
+                            style="@style/image_map_place"
+                            android:src="@drawable/i_stadium" />
+
+                        <TextView
+                            style="@style/text_item"
+
+                            android:text="@string/stadium" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/layoutNightlife"
+                        style="@style/layout_item_map_type_children">
+
+                        <ImageView
+                            style="@style/image_map_place"
+                            android:src="@drawable/i26" />
+
+                        <TextView
+                            style="@style/text_item"
+                            android:text="@string/nightLife" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/layoutAmusementPark"
+                        style="@style/layout_item_map_type_children">
+
+                        <ImageView
+                            style="@style/image_map_place"
+                            android:src="@drawable/i_amusement"/>
+
+                        <TextView
+                            style="@style/text_item"
+                            android:text="@string/amusementPark" />
+                    </LinearLayout>
+                </LinearLayout>
+
+                <LinearLayout style="@style/layout_item_map_type">
+
+                    <LinearLayout
+                        android:id="@+id/layoutMovie"
+                        style="@style/layout_item_map_type_children">
+
+                        <ImageView
+                            style="@style/image_map_place"
+                            android:src="@drawable/i18" />
+
+                        <TextView
+                            style="@style/text_item"
+                            android:text="@string/movies" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/layoutMuseum"
+                        style="@style/layout_item_map_type_children">
+
+                        <ImageView
+                            style="@style/image_map_place"
+                            android:src="@drawable/i39" />
+
+                        <TextView
+                            style="@style/text_item"
+                            android:text="@string/museum" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/layoutLibrary"
+                        style="@style/layout_item_map_type_children">
+
+                        <ImageView
+                            style="@style/image_map_place"
+                            android:src="@drawable/i38" />
+
+                        <TextView
+                            style="@style/text_item"
+
+                            android:text="@string/library" />
+                    </LinearLayout>
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="15dp"
+                android:layout_marginTop="15dp"
+                android:text="@string/shopping"
+                android:textColor="#212121"
+                android:textSize="15sp" />
+
+            <LinearLayout
+                style="@style/layout_item_map_type_parent"
+                android:orientation="vertical">
+
+                <LinearLayout style="@style/layout_item_map_type">
+
+                    <LinearLayout
+                        android:id="@+id/layoutGroceries"
+                        style="@style/layout_item_map_type_children">
+
+                        <ImageView
+                            style="@style/image_map_place"
+                            android:src="@drawable/i_grocery" />
+
+                        <TextView
+                            style="@style/text_item"
+                            android:text="@string/grocery" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/layoutBook"
+                        style="@style/layout_item_map_type_children">
+
+                        <ImageView
+                            style="@style/image_map_place"
+                            android:src="@drawable/i_book" />
+
+                        <TextView
+                            style="@style/text_item"
+                            android:text="@string/book" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/layoutCarDealer"
+                        style="@style/layout_item_map_type_children">
+
+                        <ImageView
+                            style="@style/image_map_place"
+                            android:src="@drawable/i_car" />
+
+                        <TextView
+                            style="@style/text_item"
+                            android:text="@string/carDealers" />
+                    </LinearLayout>
+
+                </LinearLayout>
+
+                <LinearLayout style="@style/layout_item_map_type">
+
+                    <LinearLayout
+                        android:id="@+id/layoutHomeGarden"
+                        style="@style/layout_item_map_type_children">
+
+                        <ImageView
+                            style="@style/image_map_place"
+                            android:src="@drawable/i_home" />
+
+                        <TextView
+                            style="@style/text_item"
+
+                            android:text="@string/homeGarden" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/layoutClothing"
+                        style="@style/layout_item_map_type_children">
+
+                        <ImageView
+                            style="@style/image_map_place"
+                            android:src="@drawable/i_apparel"
+                            android:tint="#ff9e80" />
+
+                        <TextView
+                            style="@style/text_item"
+                            android:text="@string/apparel" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/layoutShoppingCenter"
+                        style="@style/layout_item_map_type_children">
+
+                        <ImageView
+                            style="@style/image_map_place"
+                            android:src="@drawable/i25" />
+
+                        <TextView
+                            style="@style/text_item"
+
+                            android:text="@string/shoppingCenter" />
+                    </LinearLayout>
+                </LinearLayout>
+
+                <LinearLayout style="@style/layout_item_map_type">
+
+                    <LinearLayout
+                        android:id="@+id/layoutElectronics"
+                        style="@style/layout_item_map_type_children">
+
+                        <ImageView
+                            style="@style/image_map_place"
+                            android:src="@drawable/i_electronic" />
+
+                        <TextView
+                            style="@style/text_item"
+
+                            android:text="@string/electronic" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/layoutJelwery"
+                        style="@style/layout_item_map_type_children">
+
+                        <ImageView
+                            style="@style/image_map_place"
+                            android:src="@drawable/i_jelwery" />
+
+                        <TextView
+                            style="@style/text_item"
+                            android:text="@string/jewelry" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/layoutConvenienceStore"
+                        style="@style/layout_item_map_type_children">
+
+                        <ImageView
+                            style="@style/image_map_place"
+                            android:src="@drawable/i6" />
+
+                        <TextView
+                            style="@style/text_item"
+
+                            android:text="@string/convenieceStore" />
+                    </LinearLayout>
+                </LinearLayout>
+
+            </LinearLayout>
+
+        </LinearLayout>
+    </ScrollView>
+</RelativeLayout>

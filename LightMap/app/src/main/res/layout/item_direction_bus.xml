@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginRight="15dp"
+    android:background="#fff"
+    android:clickable="false">
+
+    <ImageView
+        android:id="@+id/imgDirection"
+        android:layout_width="35dp"
+        android:layout_height="35dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginTop="15dp"
+        android:layout_marginRight="15dp"
+        android:padding="5dp"
+        android:src="@drawable/ic_bus" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_toRightOf="@+id/imgDirection"
+        android:background="#eeeeee" />
+
+    <View
+        android:id="@+id/lineBus"
+        android:layout_width="15dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/imgDirection" android:layout_marginBottom="3dp"
+        android:layout_alignBottom="@+id/arrival_stop"
+        android:layout_marginLeft="25dp"
+        android:background="@drawable/bg_line_bus" />
+
+    <TextView
+        android:id="@+id/departure_stop_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="10dp"
+        android:layout_toRightOf="@+id/imgDirection"
+        android:lineSpacingExtra="5dp"
+        android:text="Walk to DH Luat / DH Luat"
+        android:textColor="#424242"
+        android:textSize="16sp"
+        android:textStyle="bold" />
+
+
+    <TextView
+        android:id="@+id/busName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/departure_stop_name"
+        android:layout_alignLeft="@+id/departure_stop_name"
+        android:layout_marginLeft="-5dp"
+        android:layout_marginBottom="5dp"
+        android:background="@drawable/bg_route"
+        android:paddingLeft="5dp"
+        android:paddingRight="5dp"
+        android:singleLine="true"
+        android:text="Tuyến 22C - Bến xe Giáp bát - Khu đô thị ABC"
+        android:textColor="#212121"
+        android:textSize="15sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/headsign"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/busName"
+        android:layout_alignLeft="@+id/departure_stop_name"
+        android:layout_marginBottom="5dp"
+        android:text="Khu độ thị Dương Nội"
+        android:textColor="#424242"
+        android:textSize="13sp" />
+
+    <TextView
+        android:id="@+id/num_stop"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/headsign"
+        android:layout_alignLeft="@+id/departure_stop_name"
+        android:layout_marginBottom="10dp"
+        android:text="Ride 16 stops"
+        android:textColor="#9e9e9e"
+        android:textSize="14sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/arrival_stop"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/num_stop"
+        android:layout_alignLeft="@+id/departure_stop_name"
+        android:layout_marginBottom="20dp"
+        android:text="Ga Giáp Bát"
+        android:textColor="#424242"
+        android:textSize="16sp"
+        android:textStyle="bold" />
+
+    <ImageView
+        android:id="@+id/imgStop"
+        android:layout_width="35dp"
+        android:layout_height="20dp"
+        android:layout_alignTop="@+id/arrival_stop"
+        android:layout_marginLeft="15dp"
+        android:layout_marginTop="2dp"
+        android:layout_marginRight="15dp"
+        android:padding="4dp"
+        android:src="@drawable/ic_round" />
+</RelativeLayout>

@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">GiaoThong</string>
+    <string name="routing">Routing</string>
+    <string name="find_address">Find address</string>
+    <string name="current_place">Current place</string>
+    <string name="find_near_by">Find near by</string>
 </resources>
