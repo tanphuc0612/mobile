@@ -43,8 +43,7 @@
                 android:layout_width="60dp"
                 android:layout_height="60dp"
                 android:layout_marginBottom="4dp"
-                android:src="@drawable/ic_direction"
-                app:tint="#424242" />
+                android:src="@drawable/ic_direction"/>
 
             <TextView
                 android:layout_width="wrap_content"
@@ -68,8 +67,7 @@
                 android:layout_width="60dp"
                 android:layout_height="60dp"
                 android:layout_marginBottom="4dp"
-                android:src="@drawable/ic_search_black_24dp"
-                app:tint="#424242" />
+                android:src="@drawable/ic_search_black_24dp"/>
 
             <TextView
                 android:layout_width="wrap_content"
@@ -80,7 +78,7 @@
 
     </LinearLayout>
 
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/layout1"
@@ -108,8 +106,7 @@
                 android:layout_width="50dp"
                 android:layout_height="50dp"
                 android:layout_marginBottom="4dp"
-                android:src="@drawable/ic_my_location"
-                app:tint="#424242" />
+                android:src="@drawable/ic_my_location" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -118,7 +115,7 @@
         </LinearLayout>
 
         <LinearLayout
-            android:id="@+id/layoutNearBy"
+            android:id="@+id/layoutTakePhoto"
             android:layout_width="match_parent"
             android:layout_height="120dp"
             android:layout_margin="12dp"
@@ -133,13 +130,12 @@
                 android:layout_width="50dp"
                 android:layout_height="50dp"
                 android:layout_marginBottom="4dp"
-                android:src="@drawable/ic_near_me_black_24dp"
-                app:tint="#424242" />
+                android:src="@drawable/ic_image"/>
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/find_near_by" />
+                android:text="@string/share_photo" />
         </LinearLayout>
     </LinearLayout>
 </RelativeLayout>

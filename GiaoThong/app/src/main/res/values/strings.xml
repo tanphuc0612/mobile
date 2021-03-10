@@ -3,5 +3,5 @@
     <string name="routing">Routing</string>
     <string name="find_address">Find address</string>
     <string name="current_place">Current place</string>
-    <string name="find_near_by">Find near by</string>
+    <string name="share_photo">Share a photo</string>
 </resources>
