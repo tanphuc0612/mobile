@@ -88,7 +88,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         layoutFindRouting = findViewById(R.id.layoutFindRouting);
         layoutCurrentPlace = findViewById(R.id.layoutCurrentPlace);
         layoutNearBy = findViewById(R.id.layoutNearBy);
-
     }
 
     private void getLocationPermission() {
