@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.custom.TakePhotoActivity">
+
+    <TextView
+        android:id="@+id/txtChon"
+        android:layout_width="220dp"
+        android:layout_height="31dp"
+        android:layout_marginStart="70dp"
+        android:layout_marginLeft="70dp"
+        android:layout_marginEnd="70dp"
+        android:layout_marginRight="70dp"
+        android:gravity="center"
+        android:text="Vui lòng chọn 1 trong 2 hình thức"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:layout_editor_absoluteY="93dp" />
+
+    <Button
+        android:id="@+id/button3"
+        android:layout_width="145dp"
+        android:layout_height="40dp"
+        android:layout_marginStart="30dp"
+        android:layout_marginLeft="30dp"
+        android:layout_marginTop="30dp"
+        android:gravity="center"
+        android:text="Chụp hình"
+        app:backgroundTint="#000000"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/txtChon" />
+
+    <Button
+        android:id="@+id/button4"
+        android:layout_width="145dp"
+        android:layout_height="40dp"
+        android:layout_marginTop="30dp"
+        android:layout_marginEnd="30dp"
+        android:layout_marginRight="30dp"
+        android:gravity="center"
+        android:text="Tải ảnh"
+        app:backgroundTint="#000000"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/txtChon" />
+
+    <Button
+        android:id="@+id/btn_Up"
+        android:layout_width="145dp"
+        android:layout_height="40dp"
+        android:layout_marginTop="30dp"
+        android:gravity="center|center_horizontal|center_vertical"
+        android:text="Đăng"
+        app:backgroundTint="#000000"
+        app:layout_constraintTop_toBottomOf="@+id/imageview"
+        tools:layout_editor_absoluteX="108dp"
+        tools:ignore="MissingConstraints" />
+
+    <TextView
+        android:id="@+id/txtHead"
+        android:layout_width="match_parent"
+        android:layout_height="87dp"
+        android:gravity="center"
+        android:text="Đóng góp hình ảnh"
+        android:textSize="16dp"
+        tools:ignore="MissingConstraints" />
+
+    <ImageView
+        android:id="@+id/imageview"
+        android:layout_width="304dp"
+        android:layout_height="243dp"
+        tools:layout_editor_absoluteX="30dp"
+        tools:layout_editor_absoluteY="227dp"
+        tools:srcCompat="@tools:sample/avatars"
+        tools:ignore="MissingConstraints" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

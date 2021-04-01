@@ -1,9 +1,41 @@
-<?xml version="1.0" encoding="utf-8"?>
-<fragment xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:map="http://schemas.android.com/apk/res-auto"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:sothree="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/map"
-    android:name="com.google.android.gms.maps.SupportMapFragment"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".ui.map.CurrentLocationActivity" />
+    android:layout_height="match_parent">
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnBack"
+        android:layout_width="50dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp"
+        android:paddingLeft="5dp"
+        sothree:backgroundTint="#fff"
+        sothree:icon="@drawable/ic_back"
+        sothree:iconTint="@color/black"
+        sothree:iconSize="40dp"
+        tools:targetApi="lollipop" />
+
+    <fragment xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/map"
+        android:name="com.google.android.gms.maps.SupportMapFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context="com.example.giaothong.ui.map.CurrentLocationActivity" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnMyLocation"
+        android:layout_width="50dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="right|bottom"
+        android:paddingLeft="5dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginBottom="270dp"
+        sothree:icon="@drawable/ic_my_location"
+        sothree:iconSize="40dp"
+        sothree:backgroundTint="#fff"
+        sothree:iconTint="@color/black"
+        tools:targetApi="lollipop" />
+
+</FrameLayout>

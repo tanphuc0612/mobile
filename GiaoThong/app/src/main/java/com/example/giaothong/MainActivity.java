@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.LinearLayout;
 
+import com.example.giaothong.ui.custom.TakePhotoActivity;
 import com.example.giaothong.ui.map.CurrentLocationActivity;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
@@ -21,6 +22,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         setOnClickListener();
     }
+
     private void initUI() {
         layoutFindAddress = findViewById(R.id.layoutFindAddress);
         layoutFindRouting = findViewById(R.id.layoutFindRouting);
@@ -40,6 +42,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         switch (v.getId()) {
             case R.id.layoutCurrentPlace:
                 startActivity(new Intent(MainActivity.this, CurrentLocationActivity.class));
+                break;
+            case R.id.layoutTakePhoto:
+                startActivity(new Intent(MainActivity.this, TakePhotoActivity.class));
                 break;
         }
     }
