@@ -1,32 +1,19 @@
 package com.example.giaothong.service;
 
-import android.content.Context;
-import android.widget.Toast;
-
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonObjectRequest;
-
-import org.json.JSONObject;
+import okhttp3.OkHttpClient;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 public class HttpCommon {
-    public RequestQueue requestQueue;
-    public Object activity;
+    private static String SERVER_API_URL = "http://172.30.32.1:3000";
+    private static Retrofit retrofit;
 
-    public void postMethod(String url, JSONObject object) {
-        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, "http://192.168.63.49:3000" + url, null, new Response.Listener<JSONObject>() {
-            @Override
-            public void onResponse(JSONObject response) {
-                Toast.makeText((Context) activity, response.toString(), Toast.LENGTH_SHORT).show();
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Toast.makeText((Context) activity, error.toString(), Toast.LENGTH_SHORT).show();
-            }
-        });
-        requestQueue.add(jsonObjectRequest);
+    public static Retrofit getRetrofit() {
+        OkHttpClient okHttpClient = new OkHttpClient.Builder().build();
+        if (retrofit == null) {
+            retrofit = new Retrofit.Builder().baseUrl(SERVER_API_URL).addConverterFactory(GsonConverterFactory.create()).client(okHttpClient).build();
+        }
+        return retrofit;
     }
 }
+

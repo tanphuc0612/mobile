@@ -1,39 +1,32 @@
 package com.example.giaothong.ui.custom;
 
 import android.Manifest;
-import android.content.ContentValues;
-import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.Camera;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
+import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 
-import android.provider.MediaStore;
-import android.view.View;
-import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.Toast;
-
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonObjectRequest;
-import com.android.volley.toolbox.Volley;
 import com.example.giaothong.R;
+import com.example.giaothong.data.JsonResponse;
 import com.example.giaothong.service.HttpCommon;
 import com.example.giaothong.ui.base.CameraBase;
-
-import org.json.JSONException;
-import org.json.JSONObject;
+import com.example.giaothong.ui.base.UploadApis;
 
 import java.io.File;
-import java.nio.file.Paths;
+import java.util.List;
+
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -43,7 +36,6 @@ import java.nio.file.Paths;
 public class TakePhotoActivity extends CameraBase {
     Button mCaptureBtn;
     Button btnUp;
-    HttpCommon http = new HttpCommon();
     File file;
 
     @Override
@@ -51,8 +43,6 @@ public class TakePhotoActivity extends CameraBase {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_take_photo);
-        this.http.activity = TakePhotoActivity.this;
-        this.http.requestQueue = Volley.newRequestQueue(this);
         mImageView = findViewById(R.id.imageview);
         mCaptureBtn = findViewById(R.id.button3);
         btnUp = findViewById(R.id.btn_Up);
@@ -92,13 +82,27 @@ public class TakePhotoActivity extends CameraBase {
             @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
             public void onClick(View v) {
-                JSONObject object = new JSONObject();
-                try {
-                    object.put("img", file.getAbsoluteFile());
-                    http.postMethod("/marker", object);
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
+                file = new File(getRealPathFromURI(image_uri));
+                Retrofit retrofit = HttpCommon.getRetrofit();
+                RequestBody requestBody = RequestBody.create(MediaType.parse("image/*"), file);
+                MultipartBody.Part parts = MultipartBody.Part.createFormData("image", file.getName(), requestBody);
+
+                RequestBody someData = RequestBody.create(MediaType.parse("text/plain"), "This is an new image");
+                UploadApis uploadApis = retrofit.create(UploadApis.class);
+                Call<List<JsonResponse>> call = uploadApis.uploadImage(parts, someData);
+                call.enqueue(new Callback<List<JsonResponse>>() {
+                    @Override
+                    public void onResponse(Call<List<JsonResponse>> call, Response<List<JsonResponse>> response) {
+                        for(JsonResponse model : response.body()) {
+                            System.out.println(model.getScore());
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call call, Throwable t) {
+                        Toast.makeText(TakePhotoActivity.this, t.toString(), Toast.LENGTH_LONG).show();
+                    }
+                });
             }
         });
     }
