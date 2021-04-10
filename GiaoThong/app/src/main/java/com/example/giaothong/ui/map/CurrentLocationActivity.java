@@ -1,11 +1,10 @@
 package com.example.giaothong.ui.map;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.FragmentActivity;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.giaothong.MainActivity;
 import com.example.giaothong.R;

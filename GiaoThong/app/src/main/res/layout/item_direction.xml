@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="#fff"
+    android:clickable="false">
+
+    <ImageView
+        android:id="@+id/imgDirection"
+        android:layout_width="35dp"
+        android:layout_height="35dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="15dp"
+        android:layout_marginRight="20dp"
+        android:padding="5dp"
+        android:src="@drawable/turn_right" />
+
+    <TextView
+        android:id="@+id/Html_instructions"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="15dp"
+        android:layout_marginBottom="10dp"
+        android:layout_toRightOf="@+id/imgDirection"
+        android:text="Turn right to Nguyen Chi Thanh"
+        android:textColor="#424242"
+        android:textSize="15sp" />
+
+
+    <TextView
+        android:id="@+id/distance"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/Html_instructions"
+        android:layout_alignLeft="@+id/Html_instructions"
+        android:layout_marginBottom="10dp"
+        android:text="400m"
+        android:textSize="15sp" />
+
+</RelativeLayout>

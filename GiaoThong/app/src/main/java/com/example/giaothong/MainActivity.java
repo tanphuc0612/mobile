@@ -1,14 +1,15 @@
 package com.example.giaothong;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.LinearLayout;
 
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.example.giaothong.ui.custom.TakePhotoActivity;
 import com.example.giaothong.ui.map.CurrentLocationActivity;
+import com.example.giaothong.ui.map.RoutingActivity;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
     LinearLayout layoutFindRouting, layoutFindAddress, layoutCurrentPlace, layoutTakePhoto;
@@ -40,6 +41,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
+            case R.id.layoutFindRouting:
+                startActivity(new Intent(MainActivity.this, RoutingActivity.class));
+                break;
             case R.id.layoutCurrentPlace:
                 startActivity(new Intent(MainActivity.this, CurrentLocationActivity.class));
                 break;
