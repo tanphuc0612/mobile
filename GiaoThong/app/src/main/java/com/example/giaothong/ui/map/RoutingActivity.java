@@ -490,7 +490,6 @@ public class RoutingActivity extends AppCompatActivity implements OnMapReadyCall
                 CharSequence tmp = strOrigin;
                 txtTo.setText(tmp);
                 txtFrom.setText(strDest);
-
                 LatLng tmp2 = origin;
                 origin = dest;
                 dest = tmp2;
@@ -502,7 +501,7 @@ public class RoutingActivity extends AppCompatActivity implements OnMapReadyCall
                 break;
             case R.id.btnMyLocation:
                 getDeviceLocation();
-//                locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER , MIN_TIME, MIN_DISTANCE, this);
+                locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER , MIN_TIME, MIN_DISTANCE, this);
                 break;
             case R.id.btnBack:
                 onBackPressed();
@@ -551,7 +550,6 @@ public class RoutingActivity extends AppCompatActivity implements OnMapReadyCall
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK) {
             Double lat = data.getDoubleExtra("lat", 0);
@@ -617,6 +615,7 @@ public class RoutingActivity extends AppCompatActivity implements OnMapReadyCall
     void findRoute() {
         add2Points(origin, dest);
         String url = getDirectionsUrl(origin, dest);
+        System.out.println("ok find");
         DownloadTask downloadTask = new DownloadTask();
         // Start downloading json data from Google Directions API
         downloadTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, url);

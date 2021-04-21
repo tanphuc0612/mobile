@@ -94,7 +94,6 @@ public class TakePhotoActivity extends CameraBase {
                     @Override
                     public void onResponse(Call<List<JsonResponse>> call, Response<List<JsonResponse>> response) {
                         for(JsonResponse model : response.body()) {
-                            System.out.println(model.getScore());
                         }
                     }
 
