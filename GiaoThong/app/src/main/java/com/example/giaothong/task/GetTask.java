@@ -52,7 +52,6 @@ public class GetTask extends AsyncTask<String, String, String> {
         String data = "";
         InputStream iStream = null;
         HttpURLConnection urlConnection = null;
-
         try {
             URL url = new URL(strUrl.replaceAll(" ", "%20"));
 

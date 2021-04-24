@@ -35,8 +35,6 @@ import com.example.giaothong.utils.MyDatabaseHelper;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.places.PlaceDetectionClient;
-import com.google.android.gms.location.places.PlaceLikelihood;
-import com.google.android.gms.location.places.PlaceLikelihoodBufferResponse;
 import com.google.android.gms.location.places.Places;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.LatLng;
@@ -50,7 +48,6 @@ import java.util.List;
 
 import static android.provider.SettingsSlicesContract.KEY_LOCATION;
 import static com.example.giaothong.utils.Constants.ID_ADDRESS_HISTORY;
-import static com.example.giaothong.utils.Constants.M_MAX_ENTRIES;
 
 public class SearchingActivity extends AppCompatActivity implements View.OnClickListener, AsyncResponse, AfterGetLatLng {
     LinearLayout layoutSearch;
@@ -133,9 +130,9 @@ public class SearchingActivity extends AppCompatActivity implements View.OnClick
                 addressTitle = addressList.get(position).getAddressTitle();
                 GetTask getTask = new GetTask(progressBar);
 
-                String query = "https://maps.googleapis.com/maps/api/place/details/json?placeid=" + placeId + "&key=" + getResources().getString(R.string.google_maps_key_1);
+                String query = "https://maps.googleapis.com/maps/api/place/details/json?placeid=" + placeId + "&key=" + getResources().getString(R.string.google_maps_key);
                 getTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, query);
-                getTask.afterGetLatLng = com.example.giaothong.ui.custom.SearchingActivity.this;
+                getTask.afterGetLatLng = SearchingActivity.this;
             }
         });
         lvHistory.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -176,9 +173,9 @@ public class SearchingActivity extends AppCompatActivity implements View.OnClick
                     layoutMyPosition.setVisibility(View.GONE);
 
                     GetTask getTask = new GetTask(progressBar);
-                    String query = "https://maps.googleapis.com/maps/api/place/autocomplete/json?input=" + etSearch.getText().toString() + getResources().getString(R.string.google_maps_key_1);
+                    String query = "https://maps.googleapis.com/maps/api/place/autocomplete/json?input=" + etSearch.getText().toString() + "&key=" + getResources().getString(R.string.google_maps_key);
                     getTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, query);
-                    getTask.asyncResponse = com.example.giaothong.ui.custom.SearchingActivity.this;
+                    getTask.asyncResponse = SearchingActivity.this;
                 }
             }
         });
@@ -223,7 +220,6 @@ public class SearchingActivity extends AppCompatActivity implements View.OnClick
 
                 // add to history
                 SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
-                System.out.println(sp);
                 int pos = sp.getInt(ID_ADDRESS_HISTORY, -1);
                 pos++;
                 MyDatabaseHelper myDatabaseHelper = new MyDatabaseHelper(context);
@@ -244,74 +240,6 @@ public class SearchingActivity extends AppCompatActivity implements View.OnClick
         } catch (JSONException e) {
             e.printStackTrace();
         }
-    }
-
-    private void getMyPosition() {
-        System.out.println("get my position");
-        @SuppressWarnings("MissingPermission") final Task<PlaceLikelihoodBufferResponse> placeResult =
-                mPlaceDetectionClient.getCurrentPlace(null);
-        placeResult.addOnCompleteListener
-                ((task) -> {
-                    if (task.isSuccessful() && task.getResult() != null) {
-                        PlaceLikelihoodBufferResponse likelyPlaces = task.getResult();
-                        System.out.println("ok run");
-                        // Set the count, handling cases where less than 5 entries are returned.
-                        int count;
-                        if (likelyPlaces.getCount() < M_MAX_ENTRIES) {
-                            count = likelyPlaces.getCount();
-                        } else {
-                            count = M_MAX_ENTRIES;
-                        }
-
-                        int i = 0;
-                        mLikelyPlaceNames = new String[count];
-                        mLikelyPlaceAddresses = new String[count];
-                        mLikelyPlaceAttributions = new String[count];
-                        mLikelyPlaceLatLngs = new LatLng[count];
-
-                        for (PlaceLikelihood placeLikelihood : likelyPlaces) {
-                            // Build a list of likely places to show the user.
-                            mLikelyPlaceNames[i] = (String) placeLikelihood.getPlace().getName();
-                            mLikelyPlaceAddresses[i] = (String) placeLikelihood.getPlace()
-                                    .getAddress();
-                            mLikelyPlaceAttributions[i] = (String) placeLikelihood.getPlace()
-                                    .getAttributions();
-                            mLikelyPlaceLatLngs[i] = placeLikelihood.getPlace().getLatLng();
-
-                            i++;
-                            if (i > (count - 1)) {
-                                break;
-                            }
-                        }
-                        addressList = new ArrayList<>();
-                        for (int j = 0; j < mLikelyPlaceNames.length; j++) {
-
-                            addressList.add(new Address(
-                                    mLikelyPlaceNames[j], mLikelyPlaceAddresses[j], mLikelyPlaceLatLngs[j]));
-//                                Log.i(TAG, mLikelyPlaceAddresses[j]);
-                        }
-
-                        Address address = addressList.get(0);
-
-                        Intent returnIntent = new Intent();
-                        returnIntent.putExtra("lat", address.getLatLng().latitude);
-                        returnIntent.putExtra("lng", address.getLatLng().longitude);
-                        returnIntent.putExtra("addressTitle", address.getAddressTitle());
-                        returnIntent.putExtra("addressDetail", address.getAddressDetail());
-                        setResult(Activity.RESULT_OK, returnIntent);
-
-                        // Show a dialog offering the user the list of likely places, and add a
-                        // marker at the selected place.
-
-//                                openPlacesDialog();
-
-                    } else {
-                        Intent returnIntent = new Intent();
-                        setResult(Activity.RESULT_CANCELED, returnIntent);
-                        //                            Log.e(TAG, "Exception: %s", task.getException());
-                    }
-                    finish();
-                });
     }
     public void getDeviceLocation() {
         try {

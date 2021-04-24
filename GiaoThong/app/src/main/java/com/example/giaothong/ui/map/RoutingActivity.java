@@ -34,6 +34,8 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.giaothong.R;
+import com.example.giaothong.data.Leg;
+import com.example.giaothong.data.Step;
 import com.example.giaothong.di.DirectionAdapter;
 import com.example.giaothong.service.jsonParser.DirectionsJSONParser;
 import com.example.giaothong.service.jsonParser.JSONParser;
@@ -64,6 +66,7 @@ import com.google.android.material.button.MaterialButton;
 import com.google.maps.model.TravelMode;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
@@ -73,6 +76,7 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
@@ -615,7 +619,6 @@ public class RoutingActivity extends AppCompatActivity implements OnMapReadyCall
     void findRoute() {
         add2Points(origin, dest);
         String url = getDirectionsUrl(origin, dest);
-        System.out.println("ok find");
         DownloadTask downloadTask = new DownloadTask();
         // Start downloading json data from Google Directions API
         downloadTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, url);
@@ -630,11 +633,11 @@ public class RoutingActivity extends AppCompatActivity implements OnMapReadyCall
                 btnBicycle.setImageDrawable(getDrawable(R.drawable.ic_bicycle));
                 btnBicycle.setBackground(getDrawable(R.drawable.bg_transport_unselected));
                 break;
-            case TRANSIT:
+            case BICYCLING:
                 btnCar.setImageDrawable(getDrawable(R.drawable.ic_car));
                 btnCar.setBackground(getDrawable(R.drawable.bg_transport_unselected));
-                btnBicycle.setImageDrawable(getDrawable(R.drawable.ic_bicycle));
-                btnBicycle.setBackground(getDrawable(R.drawable.bg_transport_unselected));
+                btnBicycle.setImageDrawable(getDrawable(R.drawable.ic_bicycle_white));
+                btnBicycle.setBackground(getDrawable(R.drawable.bg_transport_selected));
                 break;
         }
     }
@@ -747,54 +750,54 @@ public class RoutingActivity extends AppCompatActivity implements OnMapReadyCall
             ParserTask parserTask = new ParserTask();
             parserTask.executeOnExecutor(THREAD_POOL_EXECUTOR, result);
 
-//            GetLegTask getLegTask = new GetLegTask();
-//            getLegTask.executeOnExecutor(THREAD_POOL_EXECUTOR, result);
+            GetLegTask getLegTask = new GetLegTask();
+            getLegTask.executeOnExecutor(THREAD_POOL_EXECUTOR, result);
         }
     }
 
-//    public class GetLegTask extends AsyncTask<String, Integer, Leg> {
-//        @Override
-//        protected void onPreExecute() {
-//            super.onPreExecute();
-//            progressBar.setProgress(70);
-//        }
-//
-//        @Override
-//        protected Leg doInBackground(String... strings) {
-//            JSONObject jsonObject;
-//            try {
-//                jsonObject = new JSONObject(strings[0]);
-//                JSONParser jsonParser = new JSONParser();
-//                jsonParser.setDest(String.valueOf(strDest));
-//                jsonParser.setOrigin(String.valueOf(strOrigin));
-//                return jsonParser.parseToLeg(jsonObject);
-//
-//            } catch (JSONException e) {
-//                e.printStackTrace();
-//            }
-//            return null;
-//        }
-//
-//        @Override
-//        protected void onPostExecute(Leg leg) {
-//            super.onPostExecute(leg);
-//
-//            List<Step> stepList;
-//            if (leg != null) {
-//                progressBar.setProgress(100);
-//                stepList = Arrays.asList(leg.getSteps());
-//                directionAdapter = new DirectionAdapter(getApplicationContext(), stepList);
-//                layoutManager = new LinearLayoutManager(getApplicationContext());
-//                listViewDirection.setLayoutManager(layoutManager);
-//                listViewDirection.setAdapter(directionAdapter);
-//                duration.setText(leg.getDuration());
-//                distance.setText(leg.getDistance());
-//            } else {
-//                Toast.makeText(getApplicationContext(), "Please try again", Toast.LENGTH_LONG).show();
-//            }
-//            progressBar.setVisibility(View.GONE);
-//        }
-//    }
+    public class GetLegTask extends AsyncTask<String, Integer, Leg> {
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            progressBar.setProgress(70);
+        }
+
+        @Override
+        protected Leg doInBackground(String... strings) {
+            JSONObject jsonObject;
+            try {
+                jsonObject = new JSONObject(strings[0]);
+                JSONParser jsonParser = new JSONParser();
+                jsonParser.setDest(String.valueOf(strDest));
+                jsonParser.setOrigin(String.valueOf(strOrigin));
+                return jsonParser.parseToLeg(jsonObject);
+
+            } catch (  JSONException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Leg leg) {
+            super.onPostExecute(leg);
+
+            List<Step> stepList;
+            if (leg != null) {
+                progressBar.setProgress(100);
+                stepList = Arrays.asList(leg.getSteps());
+                directionAdapter = new DirectionAdapter(getApplicationContext(), stepList);
+                layoutManager = new LinearLayoutManager(getApplicationContext());
+                listViewDirection.setLayoutManager(layoutManager);
+                listViewDirection.setAdapter(directionAdapter);
+                duration.setText(leg.getDuration());
+                distance.setText(leg.getDistance());
+            } else {
+                Toast.makeText(getApplicationContext(), "Please try again", Toast.LENGTH_LONG).show();
+            }
+            progressBar.setVisibility(View.GONE);
+        }
+    }
 
     private class ParserTask extends AsyncTask<String, Integer, List<List<HashMap<String, String>>>> {
         @Override

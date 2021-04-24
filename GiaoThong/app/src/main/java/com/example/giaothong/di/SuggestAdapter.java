@@ -41,7 +41,7 @@ public class SuggestAdapter extends BaseAdapter {
         if (view == null) {
             view = LayoutInflater.from(mContext).inflate(R.layout.item_suggestion, null);
         }
-        TextView txtName = (TextView) view.findViewById(R.id.txtName);
+        TextView txtName = view.findViewById(R.id.txtName);
         txtName.setText(list.get(position).getAddressTitle());
         return view;
     }
