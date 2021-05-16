@@ -9,7 +9,9 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.graphics.drawable.BitmapDrawable;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.AsyncTask;
@@ -35,11 +37,14 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.giaothong.R;
 import com.example.giaothong.data.Leg;
+import com.example.giaothong.data.MarkerResponse;
 import com.example.giaothong.data.Step;
 import com.example.giaothong.di.DirectionAdapter;
+import com.example.giaothong.service.HttpCommon;
 import com.example.giaothong.service.jsonParser.DirectionsJSONParser;
 import com.example.giaothong.service.jsonParser.JSONParser;
 import com.example.giaothong.ui.base.MapActivityInterface;
+import com.example.giaothong.ui.base.UploadApis;
 import com.example.giaothong.ui.custom.SearchingActivity;
 import com.example.giaothong.utils.LatLngInterpolator;
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -63,6 +68,7 @@ import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.button.MaterialButton;
+import com.google.maps.android.PolyUtil;
 import com.google.maps.model.TravelMode;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
@@ -80,6 +86,11 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+
 import static android.provider.SettingsSlicesContract.KEY_LOCATION;
 import static com.example.giaothong.utils.Constants.DEFAULT_ZOOM;
 import static com.example.giaothong.utils.Constants.KEY_CAMERA_POSITION;
@@ -87,6 +98,7 @@ import static com.example.giaothong.utils.Constants.MIN_DISTANCE;
 import static com.example.giaothong.utils.Constants.MIN_TIME;
 import static com.example.giaothong.utils.Constants.M_MAX_ENTRIES;
 import static com.example.giaothong.utils.Constants.mDefaultLocation;
+import static com.example.giaothong.utils.Utils.angleBteweenCoordinate;
 import static com.example.giaothong.utils.Utils.getZoomLevel;
 import static com.example.giaothong.utils.Utils.midPoint;
 
@@ -100,6 +112,9 @@ public class RoutingActivity extends AppCompatActivity implements OnMapReadyCall
     private static final String TAG = RoutingActivity.class.getName();
     private GoogleMap mMap;
     ArrayList markerPoints = new ArrayList();
+    ArrayList<LatLng> trafficSignMarker = new ArrayList();
+    ArrayList trafficSignCode = new ArrayList();
+    ArrayList inLineMarker = new ArrayList();
     private ImageButton btnCar, btnBus, btnWalk, btnBicycle;
     private TextView txtFrom, txtTo, txtFrom2, txtTo2;
     LatLng origin, dest, oldLocation;
@@ -145,7 +160,7 @@ public class RoutingActivity extends AppCompatActivity implements OnMapReadyCall
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 
         initUI();
-
+        getAllMarker();
         setListener();
 
 //        slidingLayout = (SlidingUpPanelLayout)findViewById(R.id.sliding_layout);
@@ -345,6 +360,7 @@ public class RoutingActivity extends AppCompatActivity implements OnMapReadyCall
             }
         }
     }
+
     private void getCurrentPlaceAndFindRoute() {
         PlaceDetectionClient mPlaceDetectionClient = Places.getPlaceDetectionClient(this, null);
 
@@ -445,12 +461,38 @@ public class RoutingActivity extends AppCompatActivity implements OnMapReadyCall
 //            downloadTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, url);
 //        }
     }
+    void addTrafficSign(LatLng latLng, String type, String trafficSign) {
+        int height = 100;
+        int width = 100;
+        trafficSignMarker.add(latLng);
+        trafficSignCode.add(trafficSignCode);
+        // Creating MarkerOptions
+        MarkerOptions options = new MarkerOptions();
+
+        // Setting the position of the marker
+        options.position(latLng);
+        options.title(trafficSign);
+        Bitmap b;
+        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 16));
+
+        if (type.equals("danger")) {
+            BitmapDrawable danger = (BitmapDrawable) getResources().getDrawable(R.drawable.danger);
+            b = danger.getBitmap();
+        } else {
+            BitmapDrawable danger = (BitmapDrawable) getResources().getDrawable(R.drawable.warning);
+            b = danger.getBitmap();
+        }
+        Bitmap smallMarker = Bitmap.createScaledBitmap(b, width, height, false);
+        options.icon(BitmapDescriptorFactory.fromBitmap(smallMarker));
+        mMap.addMarker(options);
+    }
 
     void add2Points(LatLng origin, LatLng dest) {
 
         if (markerPoints.size() > 0) {
             markerPoints.clear();
             mMap.clear();
+            getAllMarker();
         }
         MarkerOptions options = new MarkerOptions();
         options.position(origin);
@@ -505,7 +547,7 @@ public class RoutingActivity extends AppCompatActivity implements OnMapReadyCall
                 break;
             case R.id.btnMyLocation:
                 getDeviceLocation();
-                locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER , MIN_TIME, MIN_DISTANCE, this);
+                locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, MIN_TIME, MIN_DISTANCE, this);
                 break;
             case R.id.btnBack:
                 onBackPressed();
@@ -544,7 +586,6 @@ public class RoutingActivity extends AppCompatActivity implements OnMapReadyCall
         });
         AlertDialog alertDialog = builder.create();
         alertDialog.show();
-
     }
 
     boolean readyToFindRoute() {
@@ -772,7 +813,7 @@ public class RoutingActivity extends AppCompatActivity implements OnMapReadyCall
                 jsonParser.setOrigin(String.valueOf(strOrigin));
                 return jsonParser.parseToLeg(jsonObject);
 
-            } catch (  JSONException e) {
+            } catch (JSONException e) {
                 e.printStackTrace();
             }
             return null;
@@ -835,7 +876,6 @@ public class RoutingActivity extends AppCompatActivity implements OnMapReadyCall
 
         @Override
         protected void onPostExecute(List<List<HashMap<String, String>>> result) {
-
             progressBar.setProgress(100);
             ArrayList points = null;
             PolylineOptions lineOptions = null;
@@ -858,7 +898,7 @@ public class RoutingActivity extends AppCompatActivity implements OnMapReadyCall
                     }
 
                     lineOptions.addAll(points);
-                    lineOptions.width(13);
+                    lineOptions.width(30);
                     lineOptions.color(Color.parseColor("#FF4597FF"));
                     lineOptions.geodesic(true);
 
@@ -875,13 +915,13 @@ public class RoutingActivity extends AppCompatActivity implements OnMapReadyCall
 
                 polyline = mMap.addPolyline(lineOptions);
 
-//                CameraPosition cameraPosition = new CameraPosition.Builder()
-//                        .target(midPoint(origin.latitude, origin.longitude, dest.latitude, dest.longitude))
-////                        .zoom(14)
-////                        .bearing(angleBteweenCoordinate(origin.latitude, origin.longitude, dest.latitude, dest.longitude))
-//                        .build();
-//
-//                mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+                CameraPosition cameraPosition = new CameraPosition.Builder()
+                        .target(midPoint(origin.latitude, origin.longitude, dest.latitude, dest.longitude))
+                        .zoom(14)
+                        .bearing(angleBteweenCoordinate(origin.latitude, origin.longitude, dest.latitude, dest.longitude))
+                        .build();
+
+                mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
 
                 float[] results = new float[1];
                 Location.distanceBetween(origin.latitude, origin.longitude, dest.latitude, dest.longitude, results);
@@ -890,14 +930,15 @@ public class RoutingActivity extends AppCompatActivity implements OnMapReadyCall
 
                 float zoomLevel = getZoomLevel(circleRad);
                 mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(midPoint(origin.latitude, origin.longitude, dest.latitude, dest.longitude), zoomLevel));
-
+                for (int i = 0; i < trafficSignMarker.size(); i++) {
+                    boolean contains1 = PolyUtil.isLocationOnPath(trafficSignMarker.get(i), polyline.getPoints(), true,3);
+                    System.out.println(i + ": " + contains1);
+                }
             }
 
             progressBar.setVisibility(View.GONE);
         }
-
     }
-
 
     private String getDirectionsUrl(LatLng origin, LatLng dest) {
 
@@ -921,6 +962,28 @@ public class RoutingActivity extends AppCompatActivity implements OnMapReadyCall
         String url = "https://maps.googleapis.com/maps/api/directions/" + output + "?" + parameters + "&key=" + getResources().getString(R.string.google_maps_key);
 
         return url;
+    }
+
+    public void getAllMarker() {
+        Retrofit retrofit = HttpCommon.getRetrofit();
+        UploadApis uploadApis = retrofit.create(UploadApis.class);
+        Call<List<MarkerResponse>> call = uploadApis.getImage();
+        call.enqueue(new Callback<List<MarkerResponse>>() {
+            @Override
+            public void onResponse(Call<List<MarkerResponse>> call, Response<List<MarkerResponse>> response) {
+                for (MarkerResponse model : response.body()) {
+                    if (model.getLatitude() != null && model.getLongitude() != null) {
+                        LatLng marker = new LatLng(model.getLatitude(), model.getLongitude());
+                        addTrafficSign(marker, "danger", model.getCreatedAt());
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call call, Throwable t) {
+                Toast.makeText(RoutingActivity.this, t.toString(), Toast.LENGTH_LONG).show();
+            }
+        });
     }
 
     public static String downloadUrl(String strUrl) throws IOException {
@@ -957,5 +1020,4 @@ public class RoutingActivity extends AppCompatActivity implements OnMapReadyCall
         }
         return data;
     }
-
 }

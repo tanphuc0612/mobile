@@ -34,10 +34,6 @@ import com.example.giaothong.task.GetTask;
 import com.example.giaothong.utils.MyDatabaseHelper;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.location.places.PlaceDetectionClient;
-import com.google.android.gms.location.places.Places;
-import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 
@@ -62,17 +58,11 @@ public class SearchingActivity extends AppCompatActivity implements View.OnClick
     List<Address> addressList = new ArrayList<>();
     String addressTitle;
     String action;
-    private String[] mLikelyPlaceNames;
-    private String[] mLikelyPlaceAddresses;
-    private String[] mLikelyPlaceAttributions;
-    private LatLng[] mLikelyPlaceLatLngs;
-    private PlaceDetectionClient mPlaceDetectionClient;
     private AddressHistoryAdapter addressHistoryAdapter;
     Context context;
     MyDatabaseHelper myDatabaseHelper;
     private FusedLocationProviderClient mFusedLocationProviderClient;
     private Location mLastKnownLocation;
-    private GoogleMap mMap;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -99,7 +89,6 @@ public class SearchingActivity extends AppCompatActivity implements View.OnClick
         progressBar = findViewById(R.id.progressBar);
 
         context = getApplicationContext();
-        mPlaceDetectionClient = Places.getPlaceDetectionClient(this);
         placeSuggestParser = new PlaceSuggestParser();
 
         myDatabaseHelper = new MyDatabaseHelper(getApplicationContext());

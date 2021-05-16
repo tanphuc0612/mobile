@@ -18,6 +18,7 @@ import androidx.appcompat.app.AppCompatActivity;
 public abstract class CameraBase extends AppCompatActivity {
     protected static final int PERMISSION_CODE = 1000;
     protected static final int IMAGE_CAPTURE_CODE = 1001;
+    protected static final int PICK_IMAGE = 100;
     protected ImageView mImageView = null;
     protected Uri image_uri = null;
 
@@ -31,7 +32,10 @@ public abstract class CameraBase extends AppCompatActivity {
         cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, image_uri);
         startActivityForResult(cameraIntent, IMAGE_CAPTURE_CODE);
     }
-
+    protected void openGallery() {
+        Intent gallery = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI);
+        startActivityForResult(gallery, PICK_IMAGE);
+    }
     //handling permission result
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
@@ -42,6 +46,16 @@ public abstract class CameraBase extends AppCompatActivity {
                         PackageManager.PERMISSION_GRANTED) {
                     //permission from popup was granted
                     openCamera();
+                } else {
+                    //permission from popup was denied
+                    Toast.makeText(this, "Permission denied...", Toast.LENGTH_SHORT).show();
+                }
+            }
+            case PICK_IMAGE: {
+                if (grantResults.length > 0 && grantResults[0] ==
+                        PackageManager.PERMISSION_GRANTED) {
+                    //permission from popup was granted
+                    openGallery();
                 } else {
                     //permission from popup was denied
                     Toast.makeText(this, "Permission denied...", Toast.LENGTH_SHORT).show();
@@ -59,6 +73,13 @@ public abstract class CameraBase extends AppCompatActivity {
             //set the image captured to our ImageView
             mImageView.setImageURI(image_uri);
         }
+        if(resultCode == RESULT_OK && requestCode == PICK_IMAGE){
+            image_uri = data.getData();
+
+            mImageView.setImageURI(image_uri);
+
+        }
+
     }
     public String getRealPathFromURI(Uri contentURI) {
         String result;
