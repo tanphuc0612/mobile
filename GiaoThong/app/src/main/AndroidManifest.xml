@@ -27,6 +27,12 @@
             android:name=".ui.custom.SearchingActivity"
             android:label="@string/title_search"
             android:theme="@style/Theme.GiaoThong.NoActionBar"></activity>
+        <activity
+            android:name=".ui.custom.ThanksScreen"
+            android:theme="@style/Theme.GiaoThong.NoActionBar"></activity>
+        <activity
+            android:name=".ui.custom.Choose_TrafficSign"
+            android:theme="@style/Theme.GiaoThong.NoActionBar"></activity>
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />

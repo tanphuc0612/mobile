@@ -313,6 +313,10 @@ public class RoutingActivity extends AppCompatActivity implements OnMapReadyCall
 
                                 oldLocation = new LatLng(mLastKnownLocation.getLatitude(),
                                         mLastKnownLocation.getLongitude());
+//                                View v = getLayoutInflater().inflate(R.layout.activity_routing,
+//                                        null,false);
+//                                PopUpClass popUpClass = new PopUpClass();
+//                                popUpClass.showPopupWindow(v);
 //                                marker = mMap.addMarker(new MarkerOptions()
 ////                                    .title(addressTitle)
 ////                                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.gps))

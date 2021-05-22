@@ -6,7 +6,6 @@ import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Build;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -136,8 +135,12 @@ public class TakePhotoActivity extends CameraBase {
                 call.enqueue(new Callback<List<JsonResponse>>() {
                     @Override
                     public void onResponse(Call<List<JsonResponse>> call, Response<List<JsonResponse>> response) {
-                        for (JsonResponse model : response.body()) {
-                            System.out.println(model.getName() + ':' + model.getScore());
+                        if (response.body().size() > 1) {
+                            Intent intent = new Intent(TakePhotoActivity.this, Choose_TrafficSign.class);
+                            intent.putExtra("image_uri", image_uri);
+                            startActivity(intent);
+                        }else{
+                            Toast.makeText(TakePhotoActivity.this, "Thành công", Toast.LENGTH_LONG).show();
                         }
                     }
 
