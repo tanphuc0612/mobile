@@ -313,10 +313,12 @@ public class RoutingActivity extends AppCompatActivity implements OnMapReadyCall
 
                                 oldLocation = new LatLng(mLastKnownLocation.getLatitude(),
                                         mLastKnownLocation.getLongitude());
+
 //                                View v = getLayoutInflater().inflate(R.layout.activity_routing,
 //                                        null,false);
 //                                PopUpClass popUpClass = new PopUpClass();
 //                                popUpClass.showPopupWindow(v);
+
 //                                marker = mMap.addMarker(new MarkerOptions()
 ////                                    .title(addressTitle)
 ////                                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.gps))
@@ -935,8 +937,10 @@ public class RoutingActivity extends AppCompatActivity implements OnMapReadyCall
                 float zoomLevel = getZoomLevel(circleRad);
                 mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(midPoint(origin.latitude, origin.longitude, dest.latitude, dest.longitude), zoomLevel));
                 for (int i = 0; i < trafficSignMarker.size(); i++) {
-                    boolean contains1 = PolyUtil.isLocationOnPath(trafficSignMarker.get(i), polyline.getPoints(), true,3);
-                    System.out.println(i + ": " + contains1);
+                    boolean contains = PolyUtil.isLocationOnPath(trafficSignMarker.get(i), polyline.getPoints(), true, 3);
+                    if (contains) {
+                        inLineMarker.add(trafficSignMarker.get(i));
+                    }
                 }
             }
 

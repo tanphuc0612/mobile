@@ -18,6 +18,10 @@ public interface UploadApis {
     @POST("marker")
     Call<List<JsonResponse>> uploadImage(@Part MultipartBody.Part part, @Part("latitude") RequestBody latitude, @Part("longitude") RequestBody longitude) ;
 
+    @Multipart
+    @POST("marker")
+    Call<JsonResponse> uploadImageCode(@Part("latitude") RequestBody latitude, @Part("longitude") RequestBody longitude, @Part("code") RequestBody code) ;
+
     @GET("marker")
     Call<List<MarkerResponse>> getImage() ;
 }

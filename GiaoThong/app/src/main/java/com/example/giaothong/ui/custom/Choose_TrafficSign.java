@@ -1,5 +1,6 @@
 package com.example.giaothong.ui.custom;
 
+import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.widget.ImageView;
@@ -14,9 +15,9 @@ import java.util.ArrayList;
 
 public class Choose_TrafficSign extends AppCompatActivity {
 
-    private ArrayList<TrafficSign_WillBeChosen> mTrafficSign ;
+    private ArrayList<TrafficSign_WillBeChosen> mTrafficSign;
     private RecyclerView mRecyclerTrafficSign;
-    private ChooseTrafficSignAdapter mTrafficSignAdapter ;
+    private ChooseTrafficSignAdapter mTrafficSignAdapter;
 
 
     @Override
@@ -24,34 +25,40 @@ public class Choose_TrafficSign extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_choose__traffic_sign);
 
-
-
-
         mRecyclerTrafficSign = findViewById(R.id.recyclerTrafficSign);
         mTrafficSign = new ArrayList<>();
-        createTrafficSignList();
-        mTrafficSignAdapter = new ChooseTrafficSignAdapter(this,mTrafficSign);
+        mTrafficSignAdapter = new ChooseTrafficSignAdapter(this, mTrafficSign);
         mRecyclerTrafficSign.setAdapter(mTrafficSignAdapter);
-        mRecyclerTrafficSign.setLayoutManager(new LinearLayoutManager(this,LinearLayoutManager.HORIZONTAL,false));
+        mRecyclerTrafficSign.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
 
 
-
-
-        ImageView iv_photo= (ImageView) findViewById(R.id.imageViewMain);
-        Bundle extras= getIntent().getExtras();
-        if(extras!=null)
-        {
+        ImageView iv_photo = (ImageView) findViewById(R.id.imageViewMain);
+        Bundle extras = getIntent().getExtras();
+        if (extras != null) {
             Uri path = (Uri) extras.get("image_uri");
             iv_photo.setImageURI(path);
         }
-
+        createTrafficSignList(extras);
     }
 
-    private void createTrafficSignList() {
-        mTrafficSign.add(new TrafficSign_WillBeChosen(R.drawable.c_102));
-        mTrafficSign.add(new TrafficSign_WillBeChosen(R.drawable.c_103a));
-        mTrafficSign.add(new TrafficSign_WillBeChosen(R.drawable.c_103b));
+    public int getResourceId(String name) {
+        Context context = Choose_TrafficSign.this.getApplicationContext();
+        return context.getResources().getIdentifier("c_" + name.toLowerCase(), "drawable", context.getPackageName());
     }
 
+    private void createTrafficSignList(Bundle extras) {
+        ArrayList<String> response = (ArrayList<String>) extras.get("response");
+        for (String a : response
+        ) {
+            System.out.println(a);
+        }
+        mTrafficSign.add(new TrafficSign_WillBeChosen(getResourceId(response.get(0))));
+        mTrafficSign.add(new TrafficSign_WillBeChosen(getResourceId(response.get(1))));
+        mTrafficSign.add(new TrafficSign_WillBeChosen(getResourceId(response.get(2))));
+        for (TrafficSign_WillBeChosen a : mTrafficSign
+        ) {
+            System.out.println(a.getCode());
+        }
+    }
 
 }

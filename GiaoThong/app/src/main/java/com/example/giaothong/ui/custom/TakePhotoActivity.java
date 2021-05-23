@@ -13,7 +13,6 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
-import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
 import com.example.giaothong.R;
@@ -27,6 +26,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 
 import okhttp3.MediaType;
@@ -46,11 +46,11 @@ public class TakePhotoActivity extends CameraBase {
     Button mCaptureBtn;
     Button btnUp;
     Button mSelectBtn;
+    String trafficCode;
     File file;
     private static final int PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 1;
     private FusedLocationProviderClient mFusedLocationProviderClient;
-    private boolean mLocationPermissionGranted;
-    private Location mLastKnownLocation;
+    Location mLastKnownLocation;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,9 +61,8 @@ public class TakePhotoActivity extends CameraBase {
         mSelectBtn = findViewById(R.id.btn_selectImg);
         mCaptureBtn = findViewById(R.id.btn_captureImg);
         btnUp = findViewById(R.id.btn_Next);
-        getLocationPermission();
-        getDeviceLocation();
         btnTakePhoto();
+        getDeviceLocation();
         onClickBtnSelect();
         btnUp();
     }
@@ -135,12 +134,19 @@ public class TakePhotoActivity extends CameraBase {
                 call.enqueue(new Callback<List<JsonResponse>>() {
                     @Override
                     public void onResponse(Call<List<JsonResponse>> call, Response<List<JsonResponse>> response) {
+                        ArrayList<String> mTrafficSign = new ArrayList<>();
+                        for (JsonResponse a : response.body()
+                        ) {
+                            mTrafficSign.add(a.getName());
+                        }
                         if (response.body().size() > 1) {
                             Intent intent = new Intent(TakePhotoActivity.this, Choose_TrafficSign.class);
                             intent.putExtra("image_uri", image_uri);
+                            intent.putExtra("response", mTrafficSign);
                             startActivity(intent);
-                        }else{
-                            Toast.makeText(TakePhotoActivity.this, "Thành công", Toast.LENGTH_LONG).show();
+                        } else {
+                            Intent intent = new Intent(TakePhotoActivity.this, ThanksScreen.class);
+                            startActivity(intent);
                         }
                     }
 
@@ -153,43 +159,60 @@ public class TakePhotoActivity extends CameraBase {
         });
     }
 
+    public void postCode(){
+        Retrofit retrofit = HttpCommon.getRetrofit();
+        RequestBody latitude = RequestBody.create(MediaType.parse("text/plain"), String.valueOf(mLastKnownLocation.getLatitude()));
+        RequestBody longitude = RequestBody.create(MediaType.parse("text/plain"), String.valueOf(mLastKnownLocation.getLongitude()));
+        RequestBody code = RequestBody.create(MediaType.parse("text/plain"), trafficCode);
+        UploadApis uploadApis = retrofit.create(UploadApis.class);
+        Call<JsonResponse> call = uploadApis.uploadImageCode( latitude, longitude, code);
+        call.enqueue(new Callback<JsonResponse>() {
+            @Override
+            public void onResponse(Call<JsonResponse> call, Response<JsonResponse> response) {
+                if (response.body() == null) {
+                    Toast.makeText(TakePhotoActivity.this, "Đã có lỗi xảy ra", Toast.LENGTH_LONG).show();
+                    Intent intent = new Intent(TakePhotoActivity.this, TakePhotoActivity.class);
+                    startActivity(intent);
+                } else {
+                    Intent intent = new Intent(TakePhotoActivity.this, ThanksScreen.class);
+                    startActivity(intent);
+                }
+            }
+
+            @Override
+            public void onFailure(Call call, Throwable t) {
+                Toast.makeText(TakePhotoActivity.this, t.toString(), Toast.LENGTH_LONG).show();
+            }
+        });
+    }
     public void getDeviceLocation() {
         /*
          * Get the best and most recent location of the device, which may be null in rare
          * cases when a location is not available.
          */
         try {
-            if (mLocationPermissionGranted) {
-                Task<Location> locationResult = mFusedLocationProviderClient.getLastLocation();
-                locationResult.addOnCompleteListener(this, new OnCompleteListener<Location>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Location> task) {
-                        if (task.isSuccessful()) {
-                            // Set the map's camera position to the current location of the device.
-                            mLastKnownLocation = task.getResult();
-                        } else {
-                            System.out.println("Current location is null. Using defaults.");
-                            System.out.println("Exception: " + task.getException());
+            Task<Location> locationResult = mFusedLocationProviderClient.getLastLocation();
+            locationResult.addOnCompleteListener(this, new OnCompleteListener<Location>() {
+                @Override
+                public void onComplete(@NonNull Task<Location> task) {
+                    if (task.isSuccessful()) {
+                        // Set the map's camera position to the current location of the device.
+                        mLastKnownLocation = task.getResult();
+                        Bundle extras = getIntent().getExtras();
+                        if (extras != null) {
+                            Integer code = (Integer) extras.get("image_code");
+                            trafficCode = getResources().getResourceEntryName(code);
+                            System.out.println("enter post code");
+                            postCode();
                         }
+                    } else {
+                        System.out.println("Current location is null. Using defaults.");
+                        System.out.println("Exception: " + task.getException());
                     }
-                });
-            }
+                }
+            });
         } catch (SecurityException e) {
             Log.e("Exception: %s", e.getMessage());
-        }
-    }
-
-    private void getLocationPermission() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (ContextCompat.checkSelfPermission(this.getApplicationContext(),
-                    Manifest.permission.ACCESS_FINE_LOCATION)
-                    == PackageManager.PERMISSION_GRANTED) {
-                mLocationPermissionGranted = true;
-            } else {
-                requestPermissions(
-                        new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
-                        PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION);
-            }
         }
     }
 }

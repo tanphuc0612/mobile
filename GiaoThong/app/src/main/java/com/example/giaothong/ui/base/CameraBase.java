@@ -50,6 +50,7 @@ public abstract class CameraBase extends AppCompatActivity {
                     //permission from popup was denied
                     Toast.makeText(this, "Permission denied...", Toast.LENGTH_SHORT).show();
                 }
+                break;
             }
             case PICK_IMAGE: {
                 if (grantResults.length > 0 && grantResults[0] ==

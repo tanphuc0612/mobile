@@ -20,7 +20,6 @@ public class ChooseTrafficSignAdapter extends RecyclerView.Adapter<ChooseTraffic
     public class ViewHolder extends RecyclerView.ViewHolder {
         private ImageButton imageTrafficSign;
 
-
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             imageTrafficSign = itemView.findViewById(R.id.imageButtonTraffic);
@@ -54,7 +53,8 @@ public class ChooseTrafficSignAdapter extends RecyclerView.Adapter<ChooseTraffic
                 .load(trafficSign.getCode())
                 .into(holder.imageTrafficSign);
         holder.imageTrafficSign.setOnClickListener((view -> {
-            Intent intent = new Intent(mContext, ThanksScreen.class);
+            Intent intent = new Intent(mContext, TakePhotoActivity.class);
+            intent.putExtra("image_code", trafficSign.getCode());
             mContext.startActivity(intent);
             //(*) vẫn chưa lấy đc vị trí tấm ảnh lên.
             // Chỗ này để thực hiện upload ảnh lên server.

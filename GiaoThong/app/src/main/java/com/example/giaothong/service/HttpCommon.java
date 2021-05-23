@@ -5,7 +5,7 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class HttpCommon {
-    private static String SERVER_API_URL = "http://172.31.32.1:3000";
+    private static String SERVER_API_URL = "http://172.29.96.1:3000";
     private static Retrofit retrofit;
 
     public static Retrofit getRetrofit() {
