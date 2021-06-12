@@ -467,9 +467,15 @@ public class RoutingActivity extends AppCompatActivity implements OnMapReadyCall
 //            downloadTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, url);
 //        }
     }
-    void addTrafficSign(LatLng latLng, String type, String trafficSign) {
-        int height = 100;
-        int width = 100;
+
+    public int getResourceId(String name) {
+        Context context = RoutingActivity.this.getApplicationContext();
+        return context.getResources().getIdentifier("c_" + name.toLowerCase(), "drawable", context.getPackageName());
+    }
+
+    int addTrafficSign(LatLng latLng, String type, String trafficSign) {
+        int height = 90;
+        int width = 90;
         trafficSignMarker.add(latLng);
         trafficSignCode.add(trafficSignCode);
         // Creating MarkerOptions
@@ -478,19 +484,16 @@ public class RoutingActivity extends AppCompatActivity implements OnMapReadyCall
         // Setting the position of the marker
         options.position(latLng);
         options.title(trafficSign);
-        Bitmap b;
-        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 16));
-
-        if (type.equals("danger")) {
-            BitmapDrawable danger = (BitmapDrawable) getResources().getDrawable(R.drawable.danger);
-            b = danger.getBitmap();
-        } else {
-            BitmapDrawable danger = (BitmapDrawable) getResources().getDrawable(R.drawable.warning);
-            b = danger.getBitmap();
+        int code = getResourceId(trafficSign);
+        if (code == 0) {
+            return 0;
         }
+        BitmapDrawable danger = (BitmapDrawable) getResources().getDrawable(getResourceId(trafficSign));
+        Bitmap b = danger.getBitmap();
         Bitmap smallMarker = Bitmap.createScaledBitmap(b, width, height, false);
         options.icon(BitmapDescriptorFactory.fromBitmap(smallMarker));
         mMap.addMarker(options);
+        return 1;
     }
 
     void add2Points(LatLng origin, LatLng dest) {
@@ -886,6 +889,7 @@ public class RoutingActivity extends AppCompatActivity implements OnMapReadyCall
             ArrayList points = null;
             PolylineOptions lineOptions = null;
             MarkerOptions markerOptions = new MarkerOptions();
+            System.out.println(result);
             if (result != null) {
                 for (int i = 0; i < result.size(); i++) {
                     points = new ArrayList();
@@ -982,7 +986,8 @@ public class RoutingActivity extends AppCompatActivity implements OnMapReadyCall
                 for (MarkerResponse model : response.body()) {
                     if (model.getLatitude() != null && model.getLongitude() != null) {
                         LatLng marker = new LatLng(model.getLatitude(), model.getLongitude());
-                        addTrafficSign(marker, "danger", model.getCreatedAt());
+                        addTrafficSign(marker, "danger", model.getTrafficSignCode());
+//                        System.out.println(model.getTrafficSignCode());
                     }
                 }
             }

@@ -135,18 +135,23 @@ public class TakePhotoActivity extends CameraBase {
                     @Override
                     public void onResponse(Call<List<JsonResponse>> call, Response<List<JsonResponse>> response) {
                         ArrayList<String> mTrafficSign = new ArrayList<>();
-                        for (JsonResponse a : response.body()
-                        ) {
-                            mTrafficSign.add(a.getName());
-                        }
-                        if (response.body().size() > 1) {
-                            Intent intent = new Intent(TakePhotoActivity.this, Choose_TrafficSign.class);
-                            intent.putExtra("image_uri", image_uri);
-                            intent.putExtra("response", mTrafficSign);
-                            startActivity(intent);
+                        System.out.println(response.code());
+                        if (response.code() < 300) {
+                            for (JsonResponse a : response.body()
+                            ) {
+                                mTrafficSign.add(a.getName());
+                            }
+                            if (response.body().size() > 1) {
+                                Intent intent = new Intent(TakePhotoActivity.this, Choose_TrafficSign.class);
+                                intent.putExtra("image_uri", image_uri);
+                                intent.putExtra("response", mTrafficSign);
+                                startActivity(intent);
+                            } else {
+                                Intent intent = new Intent(TakePhotoActivity.this, ThanksScreen.class);
+                                startActivity(intent);
+                            }
                         } else {
-                            Intent intent = new Intent(TakePhotoActivity.this, ThanksScreen.class);
-                            startActivity(intent);
+                            Toast.makeText(TakePhotoActivity.this, "Đã có biển báo ở vị trí hiện tại", Toast.LENGTH_LONG).show();
                         }
                     }
 
@@ -201,8 +206,7 @@ public class TakePhotoActivity extends CameraBase {
                         Bundle extras = getIntent().getExtras();
                         if (extras != null) {
                             Integer code = (Integer) extras.get("image_code");
-                            trafficCode = getResources().getResourceEntryName(code);
-                            System.out.println("enter post code");
+                            trafficCode = getResources().getResourceEntryName(code).split("c_")[1];
                             postCode();
                         }
                     } else {

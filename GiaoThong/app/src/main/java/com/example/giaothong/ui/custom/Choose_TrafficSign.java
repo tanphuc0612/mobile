@@ -48,17 +48,9 @@ public class Choose_TrafficSign extends AppCompatActivity {
 
     private void createTrafficSignList(Bundle extras) {
         ArrayList<String> response = (ArrayList<String>) extras.get("response");
-        for (String a : response
-        ) {
-            System.out.println(a);
-        }
         mTrafficSign.add(new TrafficSign_WillBeChosen(getResourceId(response.get(0))));
         mTrafficSign.add(new TrafficSign_WillBeChosen(getResourceId(response.get(1))));
         mTrafficSign.add(new TrafficSign_WillBeChosen(getResourceId(response.get(2))));
-        for (TrafficSign_WillBeChosen a : mTrafficSign
-        ) {
-            System.out.println(a.getCode());
-        }
     }
 
 }
