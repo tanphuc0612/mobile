@@ -3,7 +3,7 @@ package com.example.giaothong.data;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class MarkerResponse {
+public class MarkerResponse  {
     @SerializedName("_id")
     @Expose
     private String _id;

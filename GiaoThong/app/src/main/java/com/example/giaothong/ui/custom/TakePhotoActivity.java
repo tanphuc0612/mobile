@@ -75,7 +75,7 @@ public class TakePhotoActivity extends CameraBase {
                     if (checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) ==
                             PackageManager.PERMISSION_DENIED ||
                             checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) ==
-                                    PackageManager.PERMISSION_DENIED) {
+                                    PackageManager.PERMISSION_DENIED || PackageManager.PERMISSION_DENIED == checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE)) {
                         //permission not enabled, request it
                         String[] permission = {Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE};
                         //show popup to request permissions
@@ -101,9 +101,9 @@ public class TakePhotoActivity extends CameraBase {
                     if (checkSelfPermission(Manifest.permission.CAMERA) ==
                             PackageManager.PERMISSION_DENIED ||
                             checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) ==
-                                    PackageManager.PERMISSION_DENIED) {
+                                    PackageManager.PERMISSION_DENIED || PackageManager.PERMISSION_DENIED == checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE)) {
                         //permission not enabled, request it
-                        String[] permission = {Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE};
+                        String[] permission = {Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE};
                         //show popup to request permissions
                         requestPermissions(permission, PERMISSION_CODE);
                     } else {
@@ -135,7 +135,6 @@ public class TakePhotoActivity extends CameraBase {
                     @Override
                     public void onResponse(Call<List<JsonResponse>> call, Response<List<JsonResponse>> response) {
                         ArrayList<String> mTrafficSign = new ArrayList<>();
-                        System.out.println(response.code());
                         if (response.code() < 300) {
                             for (JsonResponse a : response.body()
                             ) {
@@ -170,10 +169,10 @@ public class TakePhotoActivity extends CameraBase {
         RequestBody longitude = RequestBody.create(MediaType.parse("text/plain"), String.valueOf(mLastKnownLocation.getLongitude()));
         RequestBody code = RequestBody.create(MediaType.parse("text/plain"), trafficCode);
         UploadApis uploadApis = retrofit.create(UploadApis.class);
-        Call<JsonResponse> call = uploadApis.uploadImageCode( latitude, longitude, code);
-        call.enqueue(new Callback<JsonResponse>() {
+        Call<List<JsonResponse>> call = uploadApis.uploadImageCode( latitude, longitude, code);
+        call.enqueue(new Callback<List<JsonResponse>>() {
             @Override
-            public void onResponse(Call<JsonResponse> call, Response<JsonResponse> response) {
+            public void onResponse(Call<List<JsonResponse>> call, Response<List<JsonResponse>> response) {
                 if (response.body() == null) {
                     Toast.makeText(TakePhotoActivity.this, "Đã có lỗi xảy ra", Toast.LENGTH_LONG).show();
                     Intent intent = new Intent(TakePhotoActivity.this, TakePhotoActivity.class);
@@ -206,7 +205,7 @@ public class TakePhotoActivity extends CameraBase {
                         Bundle extras = getIntent().getExtras();
                         if (extras != null) {
                             Integer code = (Integer) extras.get("image_code");
-                            trafficCode = getResources().getResourceEntryName(code).split("c_")[1];
+                            trafficCode = getResources().getResourceEntryName(code);
                             postCode();
                         }
                     } else {

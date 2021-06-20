@@ -14,6 +14,7 @@ import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.location.Location;
 import android.location.LocationManager;
+import android.media.MediaPlayer;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -83,6 +84,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
@@ -112,9 +114,8 @@ public class RoutingActivity extends AppCompatActivity implements OnMapReadyCall
     private static final String TAG = RoutingActivity.class.getName();
     private GoogleMap mMap;
     ArrayList markerPoints = new ArrayList();
-    ArrayList<LatLng> trafficSignMarker = new ArrayList();
-    ArrayList trafficSignCode = new ArrayList();
-    ArrayList inLineMarker = new ArrayList();
+    ArrayList<MarkerResponse> trafficSignMarker = new ArrayList();
+    ArrayList<MarkerResponse> inLineMarker = new ArrayList();
     private ImageButton btnCar, btnBus, btnWalk, btnBicycle;
     private TextView txtFrom, txtTo, txtFrom2, txtTo2;
     LatLng origin, dest, oldLocation;
@@ -326,6 +327,18 @@ public class RoutingActivity extends AppCompatActivity implements OnMapReadyCall
 //                                        .position(new LatLng(mLastKnownLocation.getLatitude(),
 //                                                mLastKnownLocation.getLongitude())));
 //                                    .snippet(addressDetail));
+                                if (dest != null && origin != null) {
+                                    if (getDistanceToDest(0) < 50) {
+                                        try {
+                                            MediaPlayer player = MediaPlayer.create(null,getResourceId(inLineMarker.get(0).getTrafficSignCode(),"raw") );
+                                            player.start();
+                                        } catch (Exception e) {
+                                            e.printStackTrace();
+                                        }
+                                    }
+                                    inLineMarker.remove(0);
+                                }
+
                                 if (getIntent().getBooleanExtra("GoToAddress", false)) {
                                     dest = new LatLng(getIntent().getDoubleExtra("dest-lat", 0),
                                             getIntent().getDoubleExtra("dest-lng", 0));
@@ -468,27 +481,26 @@ public class RoutingActivity extends AppCompatActivity implements OnMapReadyCall
 //        }
     }
 
-    public int getResourceId(String name) {
+    public int getResourceId(String name, String packageName) {
         Context context = RoutingActivity.this.getApplicationContext();
-        return context.getResources().getIdentifier("c_" + name.toLowerCase(), "drawable", context.getPackageName());
+        return context.getResources().getIdentifier("c_"+name.toLowerCase(), packageName, context.getPackageName());
     }
 
-    int addTrafficSign(LatLng latLng, String type, String trafficSign) {
+    int addTrafficSign(MarkerResponse response) {
         int height = 90;
         int width = 90;
-        trafficSignMarker.add(latLng);
-        trafficSignCode.add(trafficSignCode);
+        trafficSignMarker.add(response);
         // Creating MarkerOptions
         MarkerOptions options = new MarkerOptions();
 
         // Setting the position of the marker
-        options.position(latLng);
-        options.title(trafficSign);
-        int code = getResourceId(trafficSign);
+        options.position(new LatLng(response.getLatitude(),response.getLongitude()));
+        options.title(response.getTrafficSignCode());
+        int code = getResourceId(response.getTrafficSignCode(),"drawable");
         if (code == 0) {
             return 0;
         }
-        BitmapDrawable danger = (BitmapDrawable) getResources().getDrawable(getResourceId(trafficSign));
+        BitmapDrawable danger = (BitmapDrawable) getResources().getDrawable(code);
         Bitmap b = danger.getBitmap();
         Bitmap smallMarker = Bitmap.createScaledBitmap(b, width, height, false);
         options.icon(BitmapDescriptorFactory.fromBitmap(smallMarker));
@@ -941,17 +953,42 @@ public class RoutingActivity extends AppCompatActivity implements OnMapReadyCall
                 float zoomLevel = getZoomLevel(circleRad);
                 mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(midPoint(origin.latitude, origin.longitude, dest.latitude, dest.longitude), zoomLevel));
                 for (int i = 0; i < trafficSignMarker.size(); i++) {
-                    boolean contains = PolyUtil.isLocationOnPath(trafficSignMarker.get(i), polyline.getPoints(), true, 3);
+                    LatLng location = new LatLng(trafficSignMarker.get(i).getLatitude(), trafficSignMarker.get(i).getLongitude());
+                    boolean contains = PolyUtil.isLocationOnPath(location, polyline.getPoints(), true, 3);
                     if (contains) {
                         inLineMarker.add(trafficSignMarker.get(i));
                     }
                 }
+
+                sortInlineMarker();
             }
 
             progressBar.setVisibility(View.GONE);
         }
     }
 
+    private float getDistanceToDest(int n){
+        Location locationA = new Location("point a");
+        Location locationB = new Location("point b");
+        locationA.setLatitude(inLineMarker.get(n).getLatitude());
+        locationA.setLongitude(inLineMarker.get(n).getLongitude());
+        locationB.setLatitude(dest.latitude);
+        locationB.setLongitude(dest.longitude);
+        return locationA.distanceTo(locationB);
+    }
+
+    private void sortInlineMarker() {
+        int min;
+        for (int i = 0; i < inLineMarker.size() - 1; i++) {
+            min = i;
+            for (int j = i + 1; j < inLineMarker.size(); j++) {
+                if (getDistanceToDest(j) < getDistanceToDest(min)) {
+                    min = j;
+                }
+            }
+            Collections.swap(inLineMarker, i, min);
+        }
+    }
     private String getDirectionsUrl(LatLng origin, LatLng dest) {
 
         // Origin of route
@@ -985,9 +1022,7 @@ public class RoutingActivity extends AppCompatActivity implements OnMapReadyCall
             public void onResponse(Call<List<MarkerResponse>> call, Response<List<MarkerResponse>> response) {
                 for (MarkerResponse model : response.body()) {
                     if (model.getLatitude() != null && model.getLongitude() != null) {
-                        LatLng marker = new LatLng(model.getLatitude(), model.getLongitude());
-                        addTrafficSign(marker, "danger", model.getTrafficSignCode());
-//                        System.out.println(model.getTrafficSignCode());
+                        addTrafficSign(model);
                     }
                 }
             }

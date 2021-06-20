@@ -20,7 +20,7 @@ public interface UploadApis {
 
     @Multipart
     @POST("marker")
-    Call<JsonResponse> uploadImageCode(@Part("latitude") RequestBody latitude, @Part("longitude") RequestBody longitude, @Part("code") RequestBody code) ;
+    Call<List<JsonResponse>> uploadImageCode(@Part("latitude") RequestBody latitude, @Part("longitude") RequestBody longitude, @Part("code") RequestBody code) ;
 
     @GET("marker")
     Call<List<MarkerResponse>> getImage() ;
