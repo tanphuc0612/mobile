@@ -35,7 +35,6 @@ public class GetTask extends AsyncTask<String, String, String> {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        System.out.println(data);
         return data;
     }
 
@@ -81,8 +80,6 @@ public class GetTask extends AsyncTask<String, String, String> {
             iStream.close();
             urlConnection.disconnect();
         }
-        System.out.println(strUrl);
-        System.out.println(data);
         return data;
     }
 }
