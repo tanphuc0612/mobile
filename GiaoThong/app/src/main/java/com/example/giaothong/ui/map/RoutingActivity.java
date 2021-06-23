@@ -328,7 +328,7 @@ public class RoutingActivity extends AppCompatActivity implements OnMapReadyCall
 //                                                mLastKnownLocation.getLongitude())));
 //                                    .snippet(addressDetail));
                                 if (dest != null && origin != null) {
-                                    if (getDistanceToDest(0) < 50) {
+                                    if (getDistanceToOrigin(0) < 50) {
                                         try {
                                             MediaPlayer player = MediaPlayer.create(null,getResourceId(inLineMarker.get(0).getTrafficSignCode(),"raw") );
                                             player.start();
@@ -901,7 +901,6 @@ public class RoutingActivity extends AppCompatActivity implements OnMapReadyCall
             ArrayList points = null;
             PolylineOptions lineOptions = null;
             MarkerOptions markerOptions = new MarkerOptions();
-            System.out.println(result);
             if (result != null) {
                 for (int i = 0; i < result.size(); i++) {
                     points = new ArrayList();
@@ -967,13 +966,13 @@ public class RoutingActivity extends AppCompatActivity implements OnMapReadyCall
         }
     }
 
-    private float getDistanceToDest(int n){
+    private float getDistanceToOrigin(int n){
         Location locationA = new Location("point a");
         Location locationB = new Location("point b");
         locationA.setLatitude(inLineMarker.get(n).getLatitude());
         locationA.setLongitude(inLineMarker.get(n).getLongitude());
-        locationB.setLatitude(dest.latitude);
-        locationB.setLongitude(dest.longitude);
+        locationB.setLatitude(mLastKnownLocation.getLatitude());
+        locationB.setLongitude(mLastKnownLocation.getLongitude());
         return locationA.distanceTo(locationB);
     }
 
@@ -982,7 +981,8 @@ public class RoutingActivity extends AppCompatActivity implements OnMapReadyCall
         for (int i = 0; i < inLineMarker.size() - 1; i++) {
             min = i;
             for (int j = i + 1; j < inLineMarker.size(); j++) {
-                if (getDistanceToDest(j) < getDistanceToDest(min)) {
+                System.out.println(getDistanceToOrigin(j));
+                if (getDistanceToOrigin(j) < getDistanceToOrigin(min)) {
                     min = j;
                 }
             }
