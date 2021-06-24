@@ -119,7 +119,7 @@ public class SearchingActivity extends AppCompatActivity implements View.OnClick
                 addressTitle = addressList.get(position).getAddressTitle();
                 GetTask getTask = new GetTask(progressBar);
 
-                String query = "
+                String query = "https://maps.googleapis.com/maps/api/place/details/json?placeid=" + placeId + "&key=" + getResources().getString(R.string.google_maps_key);
                 getTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, query);
                 getTask.afterGetLatLng = SearchingActivity.this;
             }

@@ -49,7 +49,14 @@ import com.example.giaothong.ui.base.UploadApis;
 import com.example.giaothong.ui.custom.SearchingActivity;
 import com.example.giaothong.utils.LatLngInterpolator;
 import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationCallback;
+import com.google.android.gms.location.LocationListener;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.location.LocationSettingsRequest;
+import com.google.android.gms.location.LocationSettingsResponse;
+import com.google.android.gms.location.SettingsClient;
 import com.google.android.gms.location.places.PlaceDetectionClient;
 import com.google.android.gms.location.places.PlaceLikelihood;
 import com.google.android.gms.location.places.PlaceLikelihoodBufferResponse;
@@ -67,6 +74,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.button.MaterialButton;
 import com.google.maps.android.PolyUtil;
@@ -105,7 +113,7 @@ import static com.example.giaothong.utils.Utils.getZoomLevel;
 import static com.example.giaothong.utils.Utils.midPoint;
 
 public class RoutingActivity extends AppCompatActivity implements OnMapReadyCallback, View.OnClickListener, MapActivityInterface
-        , android.location.LocationListener {
+        , android.location.LocationListener, LocationListener {
     private static final int PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 1;
 
     private static final int ROUTING_TO = 6;
@@ -136,8 +144,13 @@ public class RoutingActivity extends AppCompatActivity implements OnMapReadyCall
     // The geographical location where the device is currently located. That is, the last-known
     // location retrieved by the Fused Location Provider.
     private Location mLastKnownLocation;
-    private CameraPosition mCameraPosition;
     private LocationManager locationManager;
+    private CameraPosition mCameraPosition;
+    private FusedLocationProviderClient fusedLocationClient;
+    private LocationRequest mLocationRequest;
+    private LocationCallback mlocationCallback;
+    private LocationSettingsRequest.Builder builder;
+    private static final int REQUEST_CHECK_SETTINGS = 102;
     Marker marker;
     ImageButton btnBack;
     String addressTitle;
@@ -159,13 +172,113 @@ public class RoutingActivity extends AppCompatActivity implements OnMapReadyCall
         mapFragment.getMapAsync(this);
 
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        //
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
+        fetchLastLocation();
+        mlocationCallback = new LocationCallback() {
+            @Override
+            public void onLocationResult(LocationResult locationResult) {
+                if (locationResult == null) {
+                    return;
+                }
+                for (Location location : locationResult.getLocations()) {
+                    checkTraffic(location);
+                    Log.e("CONTINIOUSLOC: ", location.toString());
+                }
+            };
+        };
 
+        mLocationRequest = createLocationRequest();
+        builder = new LocationSettingsRequest.Builder()
+                .addLocationRequest(mLocationRequest);
+        checkLocationSetting(builder);
+
+        //
         initUI();
         getAllMarker();
         setListener();
 
 //        slidingLayout = (SlidingUpPanelLayout)findViewById(R.id.sliding_layout);
 //        slidingLayout.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
+    }
+
+    private void fetchLastLocation() {
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                // TODO: Consider calling
+                //    Activity#requestPermissions
+                // here to request the missing permissions, and then overriding
+                //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                //                                          int[] grantResults)
+                // to handle the case where the user grants the permission. See the documentation
+                // for Activity#requestPermissions for more details.
+//                    Toast.makeText(MainActivity.this, "Permission not granted, Kindly allow permission", Toast.LENGTH_LONG).show();
+                return;
+            }
+        }
+        fusedLocationClient.getLastLocation()
+                .addOnSuccessListener(this, new OnSuccessListener<Location>() {
+                    @Override
+                    public void onSuccess(Location location) {
+                        // Got last known location. In some rare situations this can be null.
+                        if (location != null) {
+                            Log.e("LAST LOCATION: ", location.toString()); // You will get your last location here
+                        }
+                    }
+                });
+
+    }
+
+    protected LocationRequest createLocationRequest() {
+        LocationRequest mLocationRequest = LocationRequest.create();
+        mLocationRequest.setInterval(30000);
+        mLocationRequest.setFastestInterval(10000);
+        mLocationRequest.setSmallestDisplacement(30);
+        mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+        return mLocationRequest;
+    }
+
+    private void checkLocationSetting(LocationSettingsRequest.Builder builder) {
+
+        SettingsClient client = LocationServices.getSettingsClient(this);
+        Task<LocationSettingsResponse> task = client.checkLocationSettings(builder.build());
+
+        task.addOnSuccessListener(this, new OnSuccessListener<LocationSettingsResponse>() {
+            @Override
+            public void onSuccess(LocationSettingsResponse locationSettingsResponse) {
+                // All location settings are satisfied. The client can initialize
+                // location requests here.
+                // ...
+                startLocationUpdates();
+                return;
+            }
+        });
+
+    }
+
+    public void startLocationUpdates() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                // TODO: Consider calling
+                //    Activity#requestPermissions
+                // here to request the missing permissions, and then overriding
+                //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                //                                          int[] grantResults)
+                // to handle the case where the user grants the permission. See the documentation
+                // for Activity#requestPermissions for more details.
+                return;
+            }
+        }
+        fusedLocationClient.requestLocationUpdates(mLocationRequest,
+                mlocationCallback,
+                null /* Looper */);
+    }
+
+
+
+    private void stopLocationUpdates() {
+        fusedLocationClient.removeLocationUpdates(mlocationCallback);
     }
 
     private void setListener() {
@@ -327,18 +440,6 @@ public class RoutingActivity extends AppCompatActivity implements OnMapReadyCall
 //                                        .position(new LatLng(mLastKnownLocation.getLatitude(),
 //                                                mLastKnownLocation.getLongitude())));
 //                                    .snippet(addressDetail));
-                                if (dest != null && origin != null) {
-                                    if (getDistanceToOrigin(0) < 50) {
-                                        try {
-                                            MediaPlayer player = MediaPlayer.create(null,getResourceId(inLineMarker.get(0).getTrafficSignCode(),"raw") );
-                                            player.start();
-                                        } catch (Exception e) {
-                                            e.printStackTrace();
-                                        }
-                                    }
-                                    inLineMarker.remove(0);
-                                }
-
                                 if (getIntent().getBooleanExtra("GoToAddress", false)) {
                                     dest = new LatLng(getIntent().getDoubleExtra("dest-lat", 0),
                                             getIntent().getDoubleExtra("dest-lng", 0));
@@ -354,18 +455,28 @@ public class RoutingActivity extends AppCompatActivity implements OnMapReadyCall
                                     .newLatLngZoom(mDefaultLocation, DEFAULT_ZOOM));
                             mMap.getUiSettings().setMyLocationButtonEnabled(false);
                         }
-
-
                     }
-
-
                 });
             }
         } catch (SecurityException e) {
             Log.e("Exception: %s", e.getMessage());
         }
     }
-
+    public void checkTraffic(Location location) {
+        if (dest != null && origin != null && inLineMarker.size() > 0) {
+            if (getDistanceToOrigin(0, location) < 50) {
+                try {
+                    MediaPlayer player = MediaPlayer.create(RoutingActivity.this, getResourceId(inLineMarker.get(0).getTrafficSignCode(), "raw"));
+                    if (player != null) {
+                        player.start();
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                inLineMarker.remove(0);
+            }
+        }
+    }
     private void getLocationPermission() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (ContextCompat.checkSelfPermission(this.getApplicationContext(),
@@ -640,6 +751,15 @@ public class RoutingActivity extends AppCompatActivity implements OnMapReadyCall
                 findRoute();
             }
 
+            if (requestCode == REQUEST_CHECK_SETTINGS) {
+                if (resultCode == RESULT_OK) {
+                    // All location settings are satisfied. The client can initialize
+                    // location requests here.
+                    startLocationUpdates();
+                } else {
+                    checkLocationSetting(builder);
+                }
+            }
         }
 //        if (requestCode == PLACE_AUTOCOMPLETE_REQUEST_CODE_FROM) {
 //            if (resultCode == RESULT_OK) {
@@ -706,12 +826,10 @@ public class RoutingActivity extends AppCompatActivity implements OnMapReadyCall
 
     @Override
     public void onLocationChanged(Location location) {
-
         LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
         CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, DEFAULT_ZOOM);
         mMap.animateCamera(cameraUpdate);
         locationManager.removeUpdates(RoutingActivity.this);
-
 //        float rotation = (float) SphericalUtil.computeHeading(oldLocation, latLng);
 //        rotateMarker(marker, latLng, rotation);
 //        marker.setRotation(location.getBearing());
@@ -951,14 +1069,14 @@ public class RoutingActivity extends AppCompatActivity implements OnMapReadyCall
 
                 float zoomLevel = getZoomLevel(circleRad);
                 mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(midPoint(origin.latitude, origin.longitude, dest.latitude, dest.longitude), zoomLevel));
+                inLineMarker.clear();
                 for (int i = 0; i < trafficSignMarker.size(); i++) {
                     LatLng location = new LatLng(trafficSignMarker.get(i).getLatitude(), trafficSignMarker.get(i).getLongitude());
-                    boolean contains = PolyUtil.isLocationOnPath(location, polyline.getPoints(), true, 3);
+                    boolean contains = PolyUtil.isLocationOnPath(location, polyline.getPoints(), true, 6);
                     if (contains) {
                         inLineMarker.add(trafficSignMarker.get(i));
                     }
                 }
-
                 sortInlineMarker();
             }
 
@@ -966,13 +1084,18 @@ public class RoutingActivity extends AppCompatActivity implements OnMapReadyCall
         }
     }
 
-    private float getDistanceToOrigin(int n){
+    private float getDistanceToOrigin(int n, Location location){
         Location locationA = new Location("point a");
         Location locationB = new Location("point b");
         locationA.setLatitude(inLineMarker.get(n).getLatitude());
         locationA.setLongitude(inLineMarker.get(n).getLongitude());
-        locationB.setLatitude(mLastKnownLocation.getLatitude());
-        locationB.setLongitude(mLastKnownLocation.getLongitude());
+        if(location == null ) {
+            locationB.setLatitude(mLastKnownLocation.getLatitude());
+            locationB.setLongitude(mLastKnownLocation.getLongitude());
+        }else{
+            locationB.setLatitude(location.getLatitude());
+            locationB.setLongitude(location.getLongitude());
+        }
         return locationA.distanceTo(locationB);
     }
 
@@ -981,8 +1104,7 @@ public class RoutingActivity extends AppCompatActivity implements OnMapReadyCall
         for (int i = 0; i < inLineMarker.size() - 1; i++) {
             min = i;
             for (int j = i + 1; j < inLineMarker.size(); j++) {
-                System.out.println(getDistanceToOrigin(j));
-                if (getDistanceToOrigin(j) < getDistanceToOrigin(min)) {
+                if (getDistanceToOrigin(j,null) < getDistanceToOrigin(min,null)) {
                     min = j;
                 }
             }
