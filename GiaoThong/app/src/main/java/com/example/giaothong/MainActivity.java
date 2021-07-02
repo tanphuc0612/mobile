@@ -19,7 +19,6 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import com.example.giaothong.ui.custom.TakePhotoActivity;
-import com.example.giaothong.ui.map.CurrentLocationActivity;
 import com.example.giaothong.ui.map.RoutingActivity;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.common.api.ResolvableApiException;
@@ -151,16 +150,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         alert.show();
     }
     private void initUI() {
-        layoutFindAddress = findViewById(R.id.layoutFindAddress);
         layoutFindRouting = findViewById(R.id.layoutFindRouting);
-        layoutCurrentPlace = findViewById(R.id.layoutCurrentPlace);
         layoutTakePhoto = findViewById(R.id.layoutTakePhoto);
     }
 
     private void setOnClickListener() {
-        layoutFindAddress.setOnClickListener(this);
         layoutFindRouting.setOnClickListener(this);
-        layoutCurrentPlace.setOnClickListener(this);
         layoutTakePhoto.setOnClickListener(this);
     }
 
@@ -169,9 +164,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         switch (v.getId()) {
             case R.id.layoutFindRouting:
                 startActivity(new Intent(MainActivity.this, RoutingActivity.class));
-                break;
-            case R.id.layoutCurrentPlace:
-                startActivity(new Intent(MainActivity.this, CurrentLocationActivity.class));
                 break;
             case R.id.layoutTakePhoto:
                 startActivity(new Intent(MainActivity.this, TakePhotoActivity.class));

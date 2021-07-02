@@ -1,17 +1,14 @@
 <resources>
     <string name="app_name">GiaoThong</string>
-    <string name="routing">Routing</string>
-    <string name="settings">Setting</string>
-    <string name="current_place">Current place</string>
-    <string name="share_photo">Share a photo</string>
-    <string name="title_activity_current_location">CurrentLocationActivity</string>
+    <string name="routing">Tìm đường</string>
+    <string name="share_photo">Chia sẻ hình ảnh</string>
     <!-- Strings used for fragments for navigation -->
-    <string name="map_type">Map type</string>
-    <string name="satellite">Satellite</string>
-    <string name="terrain">Terrain</string>
-    <string name="default_map">Default</string>
+    <string name="map_type">Loại bản đồ</string>
+    <string name="satellite">Vệ tinh</string>
+    <string name="terrain">Địa hình</string>
+    <string name="default_map">Mặc định</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="title_activity_routing">RoutingActivity</string>
-    <string name="title_search">search</string>
-    <string name="cancelButton">Cancel</string>
+    <string name="title_search">Tìm kiếm</string>
+    <string name="cancelButton">Hủy</string>
 </resources>
